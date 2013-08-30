@@ -6,6 +6,28 @@
 // TODO: look at isaac's library for this
 bool i2cmotor_debug = false;
 
+void setMotorSpeed(sbyte Speed, tSensors port, int MotorNumber)
+{
+	tByteArray I2Crequest;
+
+	I2Crequest[0] = 3;
+
+	I2Crequest[1] = 0x2;
+
+	if(MotorNumber == 1)
+	{
+		I2Crequest[2] = 0x45;
+	}
+	else
+	{
+		I2Crequest[2] = 0x46;
+	}
+
+	I2Crequest[3] = Speed;
+
+	writeI2C(port, I2Crequest);
+}
+
 // pass this 1 or 2 for the motor and S[1-4] for the port
 long getEncoderPosition(int motor, tSensors port)
 {
