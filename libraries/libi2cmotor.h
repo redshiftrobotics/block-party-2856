@@ -9,7 +9,7 @@
 
 bool i2cmotor_debug = false;
 
-void setMotorSpeed(sbyte Speed, tSensors port, int MotorNumber)
+void setMotorSpeed(tSensors port, int MotorNumber, int daisychainLevel = 1, sbyte Speed)
 {
 	tByteArray I2Crequest;
 
