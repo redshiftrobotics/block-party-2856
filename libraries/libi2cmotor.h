@@ -32,7 +32,7 @@ void setMotorSpeed(sbyte Speed, tSensors port, int MotorNumber)
 }
 
 // pass this 1 or 2 for the motor and S[1-4] for the port
-long getEncoderPosition(int motor, tSensors port)
+long getEncoderPosition(int motor, tSensors port, int daisychainLevel = 0)
 {
 		//initializes the arrays
 		tByteArray I2Crequest;
@@ -42,7 +42,7 @@ long getEncoderPosition(int motor, tSensors port)
 		I2Crequest[0] = 2;
 
 		//sends the adress as the first byte
-	  I2Crequest[1] = 0x02;
+	  I2Crequest[1] = 0x02 + daisychainLevel*2;
 
 	  //sets the starting position to start sending data at
 	  if (motor == 1)
@@ -63,7 +63,7 @@ long getEncoderPosition(int motor, tSensors port)
 }
 
 // motor should be 1 or 2, port should be S[1-4], Input should be the position to move to
-void setEncoderPosition(int motor, tSensors port, long Input)
+void setEncoderPosition(int motor, tSensors port, int daisychainLevel, long Input)
 {
 	//initializes the arrays
 	tByteArray I2Crequest;
@@ -72,7 +72,7 @@ void setEncoderPosition(int motor, tSensors port, long Input)
 	I2Crequest[0] = 8;
 
 	//sends the adress as the first byte
-  I2Crequest[1] = 0x02;
+  I2Crequest[1] = 0x02 + daisychainLevel*2;
 
 	//sets the starting position to start sending data at
   if (motor == 1)
@@ -97,7 +97,7 @@ void setEncoderPosition(int motor, tSensors port, long Input)
 }
 
 // see getEncoderValue() for args
-bool isBusy(int motor, tSensors port)
+bool isBusy(int motor, tSensors port, int daisychainLevel = 0)
 {
 	tByteArray I2Crequest;
 	tByteArray I2Cresponse;
@@ -108,7 +108,7 @@ bool isBusy(int motor, tSensors port)
 	I2Crequest[0] = 2;
 
 	// standard lego sensor address
-	I2Crequest[1] = 0x02;
+	I2Crequest[1] = 0x02 + daisychainLevel*2;
 
 	// pin address for either motor 1 or motor 2
 	if (motor == 1)
@@ -131,9 +131,9 @@ bool isBusy(int motor, tSensors port)
 	}
 }
 
-long gotoEncoderPosition(int motor, tSensors port, int encoderValue)
+long gotoEncoderPosition(int motor, tSensors port, int daisychainLevel = 0, int encoderValue)
 {
-	setEncoderPosition(motor, port, encoderValue);
+	setEncoderPosition(motor, port, daisychainLevel, encoderValue);
 	while (isBusy(motor, port))
 	{
 		eraseDisplay();
