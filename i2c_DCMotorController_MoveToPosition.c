@@ -13,31 +13,13 @@
 
 task main()
 {
-	i2cmotor_debug = true;
-
-	int encoderTarget = getEncoderPosition(2, S1) + 1440;
+	//i2cmotor_debug = true;
+	//int encoderTarget = getEncoderPosition(2, S1) + 1440;
 
 	while(true)
 	{
-		gotoEncoderPosition(2, S1, encoderTarget);
-		Sleep(10);
+		setMotorSpeed(10, S1, 1);
+		//gotoEncoderPosition(2, S1, encoderTarget);
+		//Sleep(10);
 	}
-
-	/*
-	setEncoderPosition(2, S1, TargetPosition);
-
-  while(true)
-  {
-  	eraseDisplay();
-  	nxtDisplayString(0, "%i", TargetPosition);
-  	nxtDisplayString(1, "%i", getEncoderValue(2, S1));
-  	if (isBusy(2, S1))
-  		{
-  			nxtDisplayString(2, "Still working, yo!");
-  		} else {
-  			nxtDisplayString(2, "Done!");
-  		}
-  	Sleep(10);
-
-	}*/
 }
