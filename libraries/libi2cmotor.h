@@ -50,7 +50,12 @@ void setEncoderPosition(int motor, tSensors port, long Input)
   I2Crequest[1] = 0x02;
 
 	//sets the starting position to start sending data at
-  I2Crequest[2] = 0x46;
+  if (motor == 1)
+  {
+  	I2Crequest[2] = 0x45;
+	} else {
+  	I2Crequest[2] = 0x46;
+  }
 
   //sets the motor power
   I2Crequest[3] = 0b00010000;
