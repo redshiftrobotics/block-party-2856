@@ -13,8 +13,17 @@
 
 task main()
 {
-	int TargetPosition = getEncoderValue(2, S1) + 1440;
+	i2cmotor_debug = true;
 
+	int encoderTarget = getEncoderPosition(2, S1) + 1440;
+
+	while(true)
+	{
+		gotoEncoderPosition(2, S1, encoderTarget);
+		Sleep(10);
+	}
+
+	/*
 	setEncoderPosition(2, S1, TargetPosition);
 
   while(true)
@@ -30,5 +39,5 @@ task main()
   		}
   	Sleep(10);
 
-	}
+	}*/
 }

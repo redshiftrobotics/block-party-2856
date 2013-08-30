@@ -3,14 +3,12 @@
 // doesn't support daisychains
 // also TODO: setting a constant speed and a rotating a certain amount
 
-int i2cmotor_lastMotor = null;
-tSensors i2cmotor_lastPort = null;
+// TODO: look at isaac's library for this
+bool i2cmotor_debug = false;
 
 // pass this 1 or 2 for the motor and S[1-4] for the port
-long getEncoderValue(int motor, tSensors port)
+long getEncoderPosition(int motor, tSensors port)
 {
-		i2cmotor_lastMotor = motor;
-		i2cmotor_lastPort = port;
 		//initializes the arrays
 		tByteArray I2Crequest;
 		tByteArray I2Cresponse;
@@ -101,4 +99,25 @@ bool isBusy(int motor, tSensors port)
 	} else {
 		return false;
 	}
+}
+
+long gotoEncoderPosition(int motor, tSensors port, int encoderValue)
+{
+	setEncoderPosition(motor, port, encoderValue);
+	while (isBusy(motor, port))
+	{
+		eraseDisplay();
+		if (i2cmotor_debug) {
+			nxtDisplayString(0, "Target  %i", encoderValue);
+			nxtDisplayString(1, "Current %i", getEncoderPosition(motor, port));
+			if (isBusy(motor, port))
+  		{
+  			nxtDisplayString(2, "Busy");
+  		} else {
+  			nxtDisplayString(2, "Not busy");
+  		}
+		}
+		Sleep(10);
+	}
+	return getEncoderPosition(motor, port);
 }
