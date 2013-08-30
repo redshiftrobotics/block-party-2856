@@ -1,9 +1,12 @@
-#include "drivers/common.h"
+#include "common.h"
 
 // doesn't support daisychains
 // also TODO: setting a constant speed and a rotating a certain amount
 
 // TODO: look at isaac's library for this
+
+
+
 bool i2cmotor_debug = false;
 
 void setMotorSpeed(sbyte Speed, tSensors port, int MotorNumber)

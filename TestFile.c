@@ -1,6 +1,5 @@
 #pragma config(Sensor, S1,     M_CONTROL,      sensorI2CCustom)
 
-#include "./drivers/common.h"
 #include "libraries/libi2cmotor.h"
 
 //void RotateDegrees(bool DisplayTargetPosition, bool DisplayCurrentPosition, long TargetPosition)
