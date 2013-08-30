@@ -12,13 +12,13 @@
 
 task main()
 {
-	//i2cmotor_debug = true;
-	//int encoderTarget = getEncoderPosition(2, S1) + 1440;
+	i2cmotor_debug = true;
+	int encoderTarget = getEncoderPosition(2, S1, 1) + 1440;
 
 	while(true)
 	{
-		setMotorSpeed(10, S1, 1);
-		//gotoEncoderPosition(2, S1, encoderTarget);
+		//setMotorSpeed(S1, 2, 0, 100);
+		gotoEncoderPosition(2, S1, 1, encoderTarget);
 		//Sleep(10);
 	}
 }

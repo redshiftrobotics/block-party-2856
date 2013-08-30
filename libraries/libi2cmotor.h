@@ -5,8 +5,18 @@
 
 // TODO: look at isaac's library for this
 
+/*
 
+IMPORTANT:
 
+Standard method argument order is:
+
+	void foo(int motorNumber, tSensors port, int daisychainLevel, sbyte bar)
+
+Where foo is your method name and bar is any variable that you need in addition to the standard three.
+Bar is optional, but your method must always respect motorNumber, port and daisychainLevel.
+
+*/
 bool i2cmotor_debug = false;
 
 void setMotorSpeed(tSensors port, int MotorNumber, int daisychainLevel = 1, sbyte Speed)
