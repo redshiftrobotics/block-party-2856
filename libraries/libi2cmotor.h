@@ -13,7 +13,7 @@ A. THIS CODE REQUIRES ENCODERS!
 
 B. Standard method argument order is:
 
-   	void foo(int motorNumber, tSensors port, int daisychainLevel, sbyte bar)
+   	void foo(tSensors port, int daisychainLevel, int motorNumber, sbyte bar)
 
    Where foo is your method name and bar is any variable that you need in addition to the standard three.
    Bar is optional, but your method must always respect motorNumber, port and daisychainLevel.
@@ -148,7 +148,7 @@ void setEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber, lon
 }
 
 // see getEncoderValue() for args
-int isBusy(int motor, tSensors port, int daisychainLevel)
+int isBusy(tSensors port, int daisychainLevel, int motor)
 {
 	tByteArray I2Crequest;
 	tByteArray I2Cresponse;
@@ -183,7 +183,7 @@ int isBusy(int motor, tSensors port, int daisychainLevel)
 }
 
 //goto encoder position is the wraper for all
-long gotoEncoderPosition(int motor, tSensors port, int daisychainLevel, int encoderValue)
+long gotoEncoderPosition(tSensors port, int daisychainLevel, int motor, int encoderValue)
 {
 	setEncoderPosition(motor, port, daisychainLevel, encoderValue);
 	while (isBusy(motor, port, daisychainLevel))
