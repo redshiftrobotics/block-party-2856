@@ -30,8 +30,9 @@ bool i2cmotor_debug = false;
 }
 */
 
-void setMotorSpeed(int MotorNumber, tSensors port, int daisychainLevel, sbyte Speed)
+void setMotorSpeed(tSensors port, int daisychainLevel, int MotorNumber, sbyte Speed)
 {
+	daisychainLevel --;
 	tByteArray I2Crequest;
 
 	I2Crequest[0] = 4;
@@ -59,8 +60,9 @@ void setMotorSpeed(int MotorNumber, tSensors port, int daisychainLevel, sbyte Sp
 }
 
 // pass this 1 or 2 for the motor and S[1-4] for the port
-long getEncoderPosition(int motor, tSensors port, int daisychainLevel)
+long getEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber)
 {
+		daisychainLevel--;
 		//initializes the arrays
 		tByteArray I2Crequest;
 		tByteArray I2Cresponse;
@@ -70,13 +72,15 @@ long getEncoderPosition(int motor, tSensors port, int daisychainLevel)
 
 		//sends the adress as the first byte
 		//daisychain level 0 will add 0, daisychain level 1 will add 2 to get 0x04, etc.
-	  I2Crequest[1] = 0x04 + daisychainLevel*2;
+	  I2Crequest[1] = 0x02 + daisychainLevel*2;
 
 	  //sets the starting position to start sending data at
-	  if (motor == 1)
+	  if (MotorNumber == 1)
 	  {
-	  	I2Crequest[2] = 0x49;
-		} else {
+	  	I2Crequest[2] = 0x4C;
+		}
+		else
+		{
 		  I2Crequest[2] = 0x50;
 		}
 
@@ -91,8 +95,10 @@ long getEncoderPosition(int motor, tSensors port, int daisychainLevel)
 }
 
 // motor should be 1 or 2, port should be S[1-4], Input should be the position to move to
-void setEncoderPosition(int motor, tSensors port, int daisychainLevel, long Input)
+void setEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber, long Input)
 {
+	daisychainLevel--;
+
 	//initializes the arrays
 	tByteArray I2Crequest;
 
@@ -103,29 +109,46 @@ void setEncoderPosition(int motor, tSensors port, int daisychainLevel, long Inpu
   I2Crequest[1] = 0x02 + daisychainLevel*2;
 
 	//sets the starting position to start sending data at
-  if (motor == 1)
+  if (MotorNumber == 1)
   {
-  	I2Crequest[2] = 0x45;
-	} else {
+  	//sets the starting position
+  	I2Crequest[2] = 0x40;
+
+  	//passes in the target position
+  	I2Crequest[3] = (byte)((Input >> 24) & 0x000000ff);
+	  I2Crequest[4] = (byte)((Input >> 16) & 0x000000ff);
+	  I2Crequest[5] = (byte)((Input >> 8) & 0x000000ff);
+	  I2Crequest[6] = (byte)(Input & 0x000000ff);
+
+  	//sets the motor mode
+	  I2Crequest[7] = 0b00000010;
+
+  	//sets the motor power
+	  I2Crequest[8] = 0b00010000;
+	}
+	else if (MotorNumber == 2)
+	{
+		//sets the starting position
   	I2Crequest[2] = 0x46;
+
+	  //sets the motor power
+	  I2Crequest[3] = 0b00010000;
+
+	  //sets the motor mode
+	  I2Crequest[4] = 0b00000010;
+
+	  //passes in the target position
+	  I2Crequest[5] = (byte)((Input >> 24) & 0x000000ff);
+	  I2Crequest[6] = (byte)((Input >> 16) & 0x000000ff);
+	  I2Crequest[7] = (byte)((Input >> 8) & 0x000000ff);
+	  I2Crequest[8] = (byte)(Input & 0x000000ff);
   }
 
-  //sets the motor power
-  I2Crequest[3] = 0b00010000;
-
-  //sets the motor mode
-  I2Crequest[4] = 0b00000010;
-
-  I2Crequest[5] = (byte)((Input >> 24) & 0x000000ff);
-  I2Crequest[6] = (byte)((Input >> 16) & 0x000000ff);
-  I2Crequest[7] = (byte)((Input >> 8) & 0x000000ff);
-  I2Crequest[8] = (byte)(Input & 0x000000ff);
-
-  writeI2C(S1, I2Crequest);
+  writeI2C(port, I2Crequest);
 }
 
 // see getEncoderValue() for args
-bool isBusy(int motor, tSensors port, int daisychainLevel)
+int isBusy(int motor, tSensors port, int daisychainLevel)
 {
 	tByteArray I2Crequest;
 	tByteArray I2Cresponse;
@@ -153,12 +176,13 @@ bool isBusy(int motor, tSensors port, int daisychainLevel)
 	busy = (I2Cresponse[0] >> 7);
 
 	if (busy == 0x01) {
-		return true;
+		return 1;
 	} else {
-		return false;
+		return 0;
 	}
 }
 
+//goto encoder position is the wraper for all
 long gotoEncoderPosition(int motor, tSensors port, int daisychainLevel, int encoderValue)
 {
 	setEncoderPosition(motor, port, daisychainLevel, encoderValue);
