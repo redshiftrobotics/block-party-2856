@@ -88,6 +88,7 @@ long getEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber)
 	  writeI2C(port, I2Crequest, I2Cresponse, 4);
 
 	  //creates a long out of the bytes
+	  //note: when debugging with any %i construct, this will be cast to an integer and will overflow at 32767!
 	  long EncoderValue = (I2Cresponse[0] << 24) + (I2Cresponse[1] << 16) + (I2Cresponse[2] << 8) + (I2Cresponse[3] << 0);
 
 	  //returns the long
@@ -145,6 +146,32 @@ void setEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber, lon
   }
 
   writeI2C(port, I2Crequest);
+}
+
+void resetEncoder(tSensors port, int daisychainLevel, int motorNumber)
+{
+	// for nice daisychain arg syntax starting at 1 instead of 0
+	daisychainLevel--;
+
+	// request byte array init
+	tByteArray I2CRequest;
+
+	//
+	I2CRequest[0] = 3;
+
+	// daisychain level-dependent bus address
+	I2CRequest[1] = 0x02;
+	if (motorNumber == 1)
+	{
+		I2CRequest[2] = 0x44;
+	} else {
+		I2CRequest[2] = 0x47;
+	}
+
+	// reset code for the motor mode
+	I2CRequest[3] = 0x03;
+
+	writeI2C(port, I2CRequest);
 }
 
 // see getEncoderValue() for args
