@@ -1,34 +1,27 @@
 #pragma config(Sensor, S1,     M_CONTROL,      sensorI2CCustom)
 
-#include "./drivers/common.h"
 #include "libraries/libi2cmotor.h"
-
-//void RotateDegrees(bool DisplayTargetPosition, bool DisplayCurrentPosition, long TargetPosition)
-//{
-//	int TargetPosition = EncoderValue() + 1440;
-//	SetEncoderPosition(
-//}
-
-
+#include "libraries/Write.h"
+#include "libraries/SetSpeed.h"
 
 task main()
 {
-	int TargetPosition = getEncoderValue(2, S1) + 1440;
+		SetSpeed(S1, 1, 1, 10);
+		SetSpeed(S1, 1, 2, 10);
+		InitializeWrite();
 
-	setEncoderPosition(2, S1, TargetPosition);
-
-  while(true)
-  {
-  	eraseDisplay();
-  	nxtDisplayString(0, "%i", TargetPosition);
-  	nxtDisplayString(1, "%i", getEncoderValue(2, S1));
-  	if (isBusy(2, S1))
-  		{
-  			nxtDisplayString(2, "Still working, yo!");
-  		} else {
-  			nxtDisplayString(2, "Done!");
-  		}
-  	Sleep(10);
-
-	}
+		while(true)
+		{
+		}
 }
+
+		//setEncoderPosition(2, S1, 0, (long)0);
+		//nxtDisplayString(0, "%i", getEncoderPosition(2, S1, 0));
+
+	//setMotorSpeed(2, S1, 0, -50);
+
+	//setMotorSpeed(S1, 2, 1, -50);
+	//setMotorSpeed(S1, 1, 2, -50);
+
+		//gotoEncoderPosition(2, S1, 0, encoderTarget);
+		//Sleep(10);

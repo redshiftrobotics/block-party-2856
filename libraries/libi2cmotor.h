@@ -3,14 +3,40 @@
 // doesn't support daisychains
 // also TODO: setting a constant speed and a rotating a certain amount
 
-int i2cmotor_lastMotor = null;
-tSensors i2cmotor_lastPort = null;
+
+
+void setMotorSpeed(tSensors port, int daisychainLevel, int MotorNumber, sbyte Speed)
+{
+	daisychainLevel --;
+	tByteArray I2Crequest;
+
+	I2Crequest[0] = 4;
+
+	// daisychain level 0 will add 0, daisychain level 1 will add 2 to get 0x04, etc.
+	I2Crequest[1] = 0x02 + daisychainLevel*2;
+
+
+	if(MotorNumber == 1)
+	{
+		I2Crequest[2] = 0x44;
+		// if we're on motor 1 mode comes first...
+		I2Crequest[3] = 0b00010001;
+		I2Crequest[4] = Speed;
+	}
+	else
+	{
+		I2Crequest[2] = 0x46;
+		// ...but if we're on motor 2, speed comes first.
+		I2Crequest[3] = Speed;
+		I2Crequest[4] = 0b00010001;
+	}
+
+	writeI2C(port, I2Crequest);
+}
 
 // pass this 1 or 2 for the motor and S[1-4] for the port
 long getEncoderValue(int motor, tSensors port)
 {
-		i2cmotor_lastMotor = motor;
-		i2cmotor_lastPort = port;
 		//initializes the arrays
 		tByteArray I2Crequest;
 		tByteArray I2Cresponse;
