@@ -19,16 +19,6 @@ B. Standard method argument order is:
    Bar is optional, but your method must always respect motorNumber, port and daisychainLevel.
 
 */
-bool i2cmotor_debug = false;
-
-// you should call this at the beginning of every method in this file.
-/*void i2cmotor_verifyArgs(int motorNumber, tSensors port, int daisychainLevel)
-{
-	assert(motorNumber == 1 || motorNumber == 2);
-	assert(port == S1 || port == S2 || port == S3 || port == S4);
-	assert(daisychainLevel == 0 || daisychainLevel == 1 || daisychainLevel == 2 || daisychainLevel == 3);
-}
-*/
 
 void setMotorSpeed(tSensors port, int daisychainLevel, int MotorNumber, sbyte Speed)
 {
@@ -207,26 +197,4 @@ int isBusy(tSensors port, int daisychainLevel, int motor)
 	} else {
 		return 0;
 	}
-}
-
-//goto encoder position is the wraper for all
-long gotoEncoderPosition(tSensors port, int daisychainLevel, int motor, int encoderValue)
-{
-	setEncoderPosition(motor, port, daisychainLevel, encoderValue);
-	while (isBusy(motor, port, daisychainLevel))
-	{
-		eraseDisplay();
-		if (i2cmotor_debug) {
-			nxtDisplayString(0, "Target  %i", encoderValue);
-			nxtDisplayString(1, "Current %i", getEncoderPosition(motor, port, daisychainLevel));
-			if (isBusy(motor, port, daisychainLevel))
-  		{
-  			nxtDisplayString(2, "Busy");
-  		} else {
-  			nxtDisplayString(2, "Not busy");
-  		}
-		}
-		Sleep(10);
-	}
-	return getEncoderPosition(motor, port, daisychainLevel);
 }
