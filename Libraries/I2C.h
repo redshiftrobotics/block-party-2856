@@ -86,7 +86,7 @@ long getEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber)
 }
 
 // motor should be 1 or 2, port should be S[1-4], Input should be the position to move to
-void setEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber, long Input)
+void setEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber, long EncoderPosition, byte MotorSpeed)
 {
 	daisychainLevel--;
 
@@ -106,16 +106,16 @@ void setEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber, lon
   	I2Crequest[2] = 0x40;
 
   	//passes in the target position
-  	I2Crequest[3] = (byte)((Input >> 24) & 0x000000ff);
-	  I2Crequest[4] = (byte)((Input >> 16) & 0x000000ff);
-	  I2Crequest[5] = (byte)((Input >> 8) & 0x000000ff);
-	  I2Crequest[6] = (byte)(Input & 0x000000ff);
+  	I2Crequest[3] = (byte)((EncoderPosition >> 24) & 0x000000ff);
+	  I2Crequest[4] = (byte)((EncoderPosition >> 16) & 0x000000ff);
+	  I2Crequest[5] = (byte)((EncoderPosition >> 8) & 0x000000ff);
+	  I2Crequest[6] = (byte)(EncoderPosition & 0x000000ff);
 
   	//sets the motor mode
 	  I2Crequest[7] = 0b00000010;
 
   	//sets the motor power
-	  I2Crequest[8] = 0b00010000;
+	  I2Crequest[8] = MotorSpeed;
 	}
 	else if (MotorNumber == 2)
 	{
@@ -123,16 +123,16 @@ void setEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber, lon
   	I2Crequest[2] = 0x46;
 
 	  //sets the motor power
-	  I2Crequest[3] = 0b00010000;
+	  I2Crequest[3] = MotorSpeed;
 
 	  //sets the motor mode
 	  I2Crequest[4] = 0b00000010;
 
 	  //passes in the target position
-	  I2Crequest[5] = (byte)((Input >> 24) & 0x000000ff);
-	  I2Crequest[6] = (byte)((Input >> 16) & 0x000000ff);
-	  I2Crequest[7] = (byte)((Input >> 8) & 0x000000ff);
-	  I2Crequest[8] = (byte)(Input & 0x000000ff);
+	  I2Crequest[5] = (byte)((EncoderPosition >> 24) & 0x000000ff);
+	  I2Crequest[6] = (byte)((EncoderPosition >> 16) & 0x000000ff);
+	  I2Crequest[7] = (byte)((EncoderPosition >> 8) & 0x000000ff);
+	  I2Crequest[8] = (byte)(EncoderPosition & 0x000000ff);
   }
 
   writeI2C(port, I2Crequest);
