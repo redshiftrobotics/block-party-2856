@@ -1,4 +1,4 @@
-#include "saas_common.h"
+#include "Common.h"
 
 // doesn't support daisychains
 // also TODO: setting a constant speed and a rotating a certain amount
@@ -20,7 +20,29 @@ B. Standard method argument order is:
 
 */
 
-void setMotorSpeed(tSensors port, int daisychainLevel, int MotorNumber, sbyte Speed)
+void I2C_MoveServo(tSensors port, int DaisyChainLevel, int ServoNumber, byte Position)
+{
+	tByteArray I2Crequest;
+	I2Crequest[0] = 3;
+	I2Crequest[1] = 0x02 * DaisyChainLevel;
+	I2Crequest[2] = 0x41 + ServoNumber;
+	I2Crequest[3] = Position;
+
+	writeI2C(port, I2Crequest);
+}
+
+void I2C_WritePMW(tSensors port, int DaisyChainLevel, byte Status)
+{
+	tByteArray I2Crequest;
+	tByteArray I2Cresponse;
+	I2Crequest[0] = 3;
+	I2Crequest[1] = 0x02 * DaisyChainLevel;
+	I2Crequest[2] = 0x48;
+	I2Crequest[3] = Status;
+	writeI2C(port, I2Crequest, I2Cresponse, 1);
+}
+
+void I2C_SetMotorSpeed(tSensors port, int daisychainLevel, int MotorNumber, sbyte Speed)
 {
 	daisychainLevel --;
 	tByteArray I2Crequest;
@@ -50,7 +72,7 @@ void setMotorSpeed(tSensors port, int daisychainLevel, int MotorNumber, sbyte Sp
 }
 
 // pass this 1 or 2 for the motor and S[1-4] for the port
-long getEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber)
+long I2C_GetEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber)
 {
 		daisychainLevel--;
 		//initializes the arrays
@@ -86,7 +108,7 @@ long getEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber)
 }
 
 // motor should be 1 or 2, port should be S[1-4], Input should be the position to move to
-void setEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber, long EncoderPosition, byte MotorSpeed)
+void I2C_SetEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber, long EncoderPosition, byte MotorSpeed)
 {
 	daisychainLevel--;
 
@@ -136,65 +158,4 @@ void setEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber, lon
   }
 
   writeI2C(port, I2Crequest);
-}
-
-void resetEncoder(tSensors port, int daisychainLevel, int motorNumber)
-{
-	// for nice daisychain arg syntax starting at 1 instead of 0
-	daisychainLevel--;
-
-	// request byte array init
-	tByteArray I2CRequest;
-
-	//
-	I2CRequest[0] = 3;
-
-	// daisychain level-dependent bus address
-	I2CRequest[1] = 0x02;
-	if (motorNumber == 1)
-	{
-		I2CRequest[2] = 0x44;
-	} else {
-		I2CRequest[2] = 0x47;
-	}
-
-	// reset code for the motor mode
-	I2CRequest[3] = 0x03;
-
-	writeI2C(port, I2CRequest);
-}
-
-// see getEncoderValue() for args
-int isBusy(tSensors port, int daisychainLevel, int motor)
-{
-	tByteArray I2Crequest;
-	tByteArray I2Cresponse;
-
-	ubyte busy;
-
-	// number of additional bytes to send
-	I2Crequest[0] = 2;
-
-	// standard lego sensor address
-	I2Crequest[1] = 0x02 + daisychainLevel*2;
-
-	// pin address for either motor 1 or motor 2
-	if (motor == 1)
-	{
-		I2Crequest[2] = 0x44;
-	} else {
-		I2Crequest[2] = 0x47;
-	}
-
-	// ask on the port "port" for the data in I2Crequest. get back 1 byte and put it in I2Cresponse.
-	writeI2C(port, I2Crequest, I2Cresponse, 1);
-
-	// we want busy to be only the leftmost bit in the response, so we bitshift
-	busy = (I2Cresponse[0] >> 7);
-
-	if (busy == 0x01) {
-		return 1;
-	} else {
-		return 0;
-	}
 }
