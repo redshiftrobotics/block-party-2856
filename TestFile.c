@@ -1,27 +1,19 @@
 #pragma config(Sensor, S1,     M_CONTROL,      sensorI2CCustom)
+#pragma config(Sensor, S2,     M_CONTROL,      sensorI2CCustom)
+#pragma config(Sensor, S3,     M_CONTROL,      sensorI2CCustom)
+#pragma config(Sensor, S4,     M_CONTROL,      sensorI2CCustom)
 
-#include "libraries/libi2cmotor.h"
-#include "libraries/Write.h"
-#include "libraries/SetSpeed.h"
+#include "Libraries/Motors.h"
+#include "Libraries/Servos.h"
 
 task main()
 {
-		SetSpeed(S1, 1, 1, 10);
-		SetSpeed(S1, 1, 2, 10);
-		InitializeWrite();
-
-		while(true)
-		{
-		}
+	Servos_SetPosition(S1, 1, 1, 150);
+	//Servos_SetPosition(S2, 1, 1, 150);
+	while(true)
+	{
+	}
 }
 
-		//setEncoderPosition(2, S1, 0, (long)0);
-		//nxtDisplayString(0, "%i", getEncoderPosition(2, S1, 0));
-
-	//setMotorSpeed(2, S1, 0, -50);
-
-	//setMotorSpeed(S1, 2, 1, -50);
-	//setMotorSpeed(S1, 1, 2, -50);
-
-		//gotoEncoderPosition(2, S1, 0, encoderTarget);
-		//Sleep(10);
+//Todo:
+//Make setEncoderPosition speed Argument Work
