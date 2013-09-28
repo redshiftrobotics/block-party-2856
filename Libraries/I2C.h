@@ -1,5 +1,3 @@
-#include "Common.h"
-
 // doesn't support daisychains
 // also TODO: setting a constant speed and a rotating a certain amount
 

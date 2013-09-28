@@ -8,8 +8,8 @@
 
 task main()
 {
-	Servos_SetPosition(S1, 1, 1, 150);
-	//Servos_SetPosition(S2, 1, 1, 150);
+	Motors_SetPosition(S1, 1, 1, I2C_GetEncoderPosition(S1, 1, 1) + 1440, 10);
+
 	while(true)
 	{
 	}
