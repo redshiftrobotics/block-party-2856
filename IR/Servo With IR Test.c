@@ -30,15 +30,13 @@ int FindDegree()
 		{
 			GreatestValue = C;
 			GreatestValueDegree = Degree - (DegreesOfRotation - 180);
-			writeDebugStream("%i = ", Degree - (DegreesOfRotation - 180));
-			writeDebugStream("B: %i, ", B);
-			writeDebugStream("C: %i, ", C);
-			writeDebugStreamLine("D: %i", D);
-			writeDebugStreamLine("%i", Degree - (DegreesOfRotation - 180));
+			//writeDebugStream("%i = ", Degree - (DegreesOfRotation - 180));
+			//writeDebugStream("B: %i, ", B);
+			//writeDebugStream("C: %i, ", C);
+			//writeDebugStreamLine("D: %i", D);
+			//writeDebugStreamLine("%i", Degree - (DegreesOfRotation - 180));
 
 		}
-
-
 
 		if(FirstTime)
 		{
@@ -54,10 +52,36 @@ int FindDegree()
 	return GreatestValueDegree;
 }
 
+int FindBasket()
+{
+		int Degree = FindDegree();
+		writeDebugStreamLine("%i", Degree);
+		if(Degree <= 75 && Degree > 50)
+		{
+			return 1;
+		}
+		else if(Degree >= 80 && Degree <= 105)
+		{
+			return 2;
+		}
+		else if(Degree >= 110 && Degree <= 130)
+		{
+			return 3;
+		}
+		else if(Degree >= 135 && Degree <= 155)
+		{
+			return 4;
+		}
+		else
+		{
+			return -1;
+		}
+}
+
 task main()
 {
 	while(true)
 	{
-		writeDebugStreamLine("--%i--", FindDegree());
+		writeDebugStreamLine("%i", FindBasket());
 	}
 }
