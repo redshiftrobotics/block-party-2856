@@ -99,22 +99,18 @@ task main()
 	float euler[3];
 	servo[Turret] = servoPosition;
 	wait1Msec(2000);  //stabilize
-
-/*	if (!DIMUconfigAccel(DIMU, DIMU_ACC_RANGE_2G))		//startup accelerometer
-    PlaySound(soundException);
-
-  if(!DIMUconfigGyro(DIMU, DIMU_GYRO_RANGE_500))	 //startup gyro
-    PlaySound(soundException); */
+	writeDebugStreamLine("Euler Angle, Servo Angle");
 
   HTGYROstartCal(HTGYRO);
+  wait1Msec(2000);  //stabilize
 
 	while(servoPosition < 200) {
 
 			servo[Turret] = servoPosition;
 			servoTimeStamp = nPgmTime;
 
-			if(servoTimeStamp - servoLastIncrement > 1000) {
-					servoPosition += 1;
+			if(servoTimeStamp - servoLastIncrement > 10000) {
+					servoPosition += 25;
 					servoLastIncrement = servoTimeStamp;
 
 				}
@@ -124,12 +120,12 @@ task main()
 			a_x = (float)a_x_int;
  			a_y = (float)a_y_int;
  			a_z = (float)a_z_int;
- 			// read gyro, degrees per second
-			w_z = HTGYROreadRot(HTGYRO);
+ 			// read gyro, degree per second
+			w_x = 0;
+ 			w_y = 0;
+ 			w_z = HTGYROreadRot(HTGYRO);
 
  			//convert to rad/s
- 			w_x = 0;
- 			w_y = 0;
  			w_z *= PI/180;
 
 			/*writeDebugStream("a_x, %f", a_x);
@@ -159,20 +155,14 @@ task main()
 
   		//take Psi, make it positive and in degrees
 
-  		float conv = (180/PI) -10;
-  		float eulerdeg = euler[0];
-  	  eulerdeg *= conv;
+  		float eulerdeg = radiansToDegrees(euler[0]);
 
   		if(eulerdeg < 0)
   		{
   			eulerdeg += 360;
   		}
 
-  		if(euler[0] < -PI)
-  		{
-  			euler[0] += (2*PI);
-  	  }
-
+  	  //Calculate Actual Servo Angle ( = 209/100 * servoPosition - 209)
   		float servoAngle = (float)servoPosition;
   		float slope = 2.09;
 
@@ -184,12 +174,12 @@ task main()
  			//writeDebugStream("  q1, %f", q1);
  			//writeDebugStream("  q2, %f", q2);
  			//writeDebugStream("  q3, %f", q3);
- 			writeDebugStream("  Psi, %f", euler[0]);
-  		writeDebugStream("  EulerAngle(deg), %f", eulerdeg);
+ 			//writeDebugStream("  Psi, %f", euler[0]);
+  		writeDebugStream("%f, ", eulerdeg);
  		//	writeDebugStream("  Theta, %f", euler[1]);
  		//	writeDebugStream("  Phi, %f", euler[2]);
- 			writeDebugStream("  Angle, %f", servoAngle);
- 			writeDebugStreamLine("  ServoPosition, %i", servoPosition);
+ 			writeDebugStreamLine("%f", servoAngle);
+ 			//writeDebugStreamLine("  ServoPosition, %i", servoPosition);
  			//writeDebugStreamLine("  Prgrm Time, %i", servoTimeStamp);
 
 
