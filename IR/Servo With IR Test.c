@@ -21,7 +21,7 @@ int FindDegree()
 
 	for(int Degree = DegreesOfRotation - 180; Degree < DegreesOfRotation; Degree += 5)
 	{
-		Servos_SetPosition(S1, 1, 1, ToServoValue(Degree));
+		Servos_SetPosition(S1, 3, 1, ToServoValue(Degree));
 		HTIRS2readAllACStrength(IR, A, B, C, D, E);
 
 
@@ -80,8 +80,7 @@ int FindBasket()
 
 task main()
 {
-	while(true)
-	{
-		writeDebugStreamLine("%i", FindBasket());
-	}
+		int basket = FindBasket();
+		writeDebugStreamLine("%i", basket);
+		Sleep(10);
 }
