@@ -18,6 +18,8 @@ B. Standard method argument order is:
 
 */
 
+#include "saas_common.h"
+
 void I2C_MoveServo(tSensors port, int DaisyChainLevel, int ServoNumber, byte Position)
 {
 	tByteArray I2Crequest;
