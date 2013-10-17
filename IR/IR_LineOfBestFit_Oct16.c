@@ -24,14 +24,14 @@ DOUBLE CHECK MY LOGIC PLEASE
 */
 
 //X inputs are dependant -> we use integers 0-10 to represent our sample size
-int xInput[] = {1,2,3,4,5,6,7,8,9,10}; //changed name from yInput
-int sum_x = 55;
-int sum_xSquared = 385;//EQUATION: bottom left half  = 1+4+9+16+25+36+49+64+81+100
-long mean_sum_xSquared = (sum_x^2)/10;//EQUATION: bottom right half
+int xInput[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20}; //changed name from yInput
+int sum_x = 210;
+int sum_xSquared = 2870;//EQUATION: bottom left half  = 1+4+9+16+25+36+49+64+81+100+All the other #'s squared up to 20^2
+long mean_sum_xSquared = (sum_x^2)/20;//EQUATION: bottom right half
 
 //Y inputs
 int acS1, acS2, acS3, acS4, acS5 = 0;
-int irInput[] = {0,0,0,0,0,0,0,0,0,0};
+int irInput[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 int sum_y = 0; //from 55-> 0
 
 int sum_xTimesy = 0;
@@ -50,16 +50,17 @@ task main()
 	while(true)
 	{
 		sum_y = 0; //from _x->_y
-		for (int i = 0; i<10 ; i++)
+		for (int i = 0; i<20 ; i++)
 			{
 			HTIRS2readAllACStrength(IR, acS1, acS2, acS3, acS4, acS5);
 			irInput[i] = acS3; //READINGS: Fill our array with data from the middle node
 			sum_y += irInput[i]; //CALCULATE: The sum of each value in the array. (its easiest this way)
 			sum_xTimesy += xInput[i] * irInput[i] ;//EQUATION: Top left half
+			Sleep(50);
 			}//APROOVED
-		mean_xTimesy = (sum_x * sum_y)/10; //EQUATION: Top right half
+		mean_xTimesy = (sum_x * sum_y)/20; //EQUATION: Top right half
 		slopeLOBF = (sum_xTimesy-mean_xTimesy)/(sum_xSquared - mean_sum_xSquared); //CALCULATE: LOBF slope
-		y_intLOBF = (sum_y/10) - (5.5 * slopeLOBF); //CALCULATE: LOBF y-intercept -> 5.5 = mean_x
+		//y_intLOBF = (sum_y/10) - (5.5 * slopeLOBF); //CALCULATE: LOBF y-intercept -> 5.5 = mean_x
 		/*
 		while (y_intLOBF >= y_intTH) //So long as we are above our y-intercept threshold AKA know we are close to the top of the curve
 			{

@@ -42,7 +42,7 @@
 // #pragma systemFile
 
 #ifndef __COMMON_H__
-#include "common.h"
+#include "../libraries/drivers/common.h"
 #endif
 
 #define HTIRS2_I2C_ADDR    0x10      /*!< IR Seeker I2C device address */
