@@ -1,78 +1,78 @@
 #include "Common.h"
 #include "I2C.h"
 
-tSensors Sensors[100];
-int Motors_Length = 0;
-int Motors_DaisyChainLevel[100];
-int Motors_Number[100];
-int Motors_Speed[100];
-int Motors_Encoder[100];
-bool Motors_MovingToPosition[100];
-bool Motors_UpdateMotorsInitialized = false;
-task Motors_UpdateMotors;
+//Create Task Table
+int Motors_ListLength = 0;
 
+int Motors_Sensor[10];
+int Motors_DaisyChainLevel[10];
+int Motors_MotorNumber[10];
+long Motors_Encoder[10];
+int Motors_Speed[10];
 
+string Motors_Action[10];
 
-void Motors_SetAction(tSensors Sensor, int DaisyChain, int MNumber, int MSpeed, int MEncoder, bool MovingToList)
+//Initialize Task
+task TableExecuter;
+
+bool IsTableExecuterStarted = false;
+
+//Function Starts Tabel Executer
+void Motors_StartTableExecuter()
 {
-	bool NewValueAdded = false;
-
-	if(Motors_UpdateMotorsInitialized == false)
+	if(IsTableExecuterStarted == false)
 	{
-		Motors_UpdateMotorsInitialized = true;
-		StartTask(Motors_UpdateMotors);
-	}
-
-	for(int i = 0; i < Motors_Length; i++)
-	{
-		writeDebugStreamLine("%i", Motors_Length);
-		if(Sensor == Sensors[i] && DaisyChain == Motors_DaisyChainLevel[i] && MNumber == Motors_Number[i])
-		{
-			Sensors[i] = Sensor;
-			Motors_Encoder[i] = MEncoder;
-			Motors_DaisyChainLevel[i] = DaisyChain;
-			Motors_Number[i] = MNumber;
-			Motors_Speed[i] = MSpeed;
-			Motors_MovingToPosition[i] = MovingToList;
-			NewValueAdded = true;
-		}
-	}
-	if(!NewValueAdded)
-	{
-		Sensors[Motors_Length] = Sensor;
-		Motors_DaisyChainLevel[Motors_Length] = DaisyChain;
-		Motors_Number[Motors_Length] = MNumber;
-		Motors_Encoder[Motors_Length] = MEncoder;
-		Motors_Speed[Motors_Length] = MSpeed;
-		Motors_MovingToPosition[Motors_Length] = MovingToList;
-		Motors_Length++;
+		StartTask(TableExecuter);
+		IsTableExecuterStarted = true;
 	}
 }
 
-void Motors_SetSpeed(tSensors Sensor, int DaisyChain, int MNumber, int MSpeed)
-{
-	Motors_SetAction(Sensor, DaisyChain, MNumber, MSpeed, 0, false);
-}
-
-void Motors_SetPosition(tSensors Sensor, int DaisyChain, int MNumber, int Encoder, int MSpeed)
-{
-	Motors_SetAction(Sensor, DaisyChain, MNumber, MSpeed, Encoder, true);
-}
-
-task Motors_UpdateMotors()
+//Table Executer Loop
+task TableExecuter()
 {
 	while(true)
 	{
-		for(int i = 0; i < Motors_Length; i++)
+		for(int i = 0; i < Motors_ListLength; i++)
 		{
-			if(Motors_MovingToPosition[i] == false)
+			if(Motors_Action[i] == "SetSpeed")
 			{
-				I2C_SetMotorSpeed(Sensors[i], Motors_DaisyChainLevel[i], Motors_Number[i], Motors_Speed[i]);
+				I2C_SetMotorSpeed(Motors_Sensor[i], Motors_DaisyChainLevel[i], Motors_MotorNumber[i], Motors_Speed[i]);
 			}
-			else if(Motors_MovingToPosition[i] == true)
+			else if(Motors_Action[i] == "SetPosition")
 			{
-				I2C_SetEncoderPosition(Sensors[i], Motors_DaisyChainLevel[i], Motors_Number[i], Motors_Encoder[i], Motors_Speed[i]);
+				I2C_SetEncoderPosition(Motors_Sensor[i], Motors_DaisyChainLevel[i], Motors_MotorNumber[i], Motors_Encoder[i], Motors_Speed[i]);
 			}
 		}
 	}
+}
+
+//
+void Motors_SetSpeed(tSensors Sensor, int DaisyChainLevel, int MotorNumber, int MotorSpeed)
+{
+	Motors_StartTableExecuter();
+
+	Motors_Action[Motors_ListLength] = "SetSpeed";
+	Motors_Sensor[Motors_ListLength] = Sensor;
+	Motors_DaisyChainLevel[Motors_ListLength] = DaisyChainLevel;
+	Motors_MotorNumber[Motors_ListLength] = MotorNumber;
+	Motors_Speed[Motors_ListLength] = MotorSpeed;
+
+	Motors_ListLength++;
+}
+
+void Motors_SetPosition(int DaisyChainLevel, int MotorNumber, long MotorEncoder, int MotorSpeed, tSensors Sensor)
+{
+	writeDebugStreamLine("Second Value: %i", 	MotorEncoder);
+	//The above value reads wrong.
+
+	Motors_StartTableExecuter();
+
+	Motors_Action[Motors_ListLength] = "SetPosition";
+	Motors_Sensor[Motors_ListLength] = Sensor;
+	Motors_DaisyChainLevel[Motors_ListLength] = DaisyChainLevel;
+	Motors_MotorNumber[Motors_ListLength] = MotorNumber;
+	Motors_Encoder[Motors_ListLength] = MotorEncoder;
+	Motors_Speed[Motors_ListLength] = MotorSpeed;
+
+	Motors_ListLength++;
 }

@@ -17,9 +17,25 @@ B. Standard method argument order is:
    Bar is optional, but your method must always respect motorNumber, port and daisychainLevel.
 
 */
+<<<<<<< HEAD
 
 #include "saas_common.h"
 
+=======
+long ConvertBytesToLong(byte x, byte y, byte z, byte q)
+{
+	long ReturnValue;
+	if(q == 0)
+	{
+		ReturnValue = (65536 * z) + (y * 256) + x;
+	}
+	else if (q == 255)
+	{
+		ReturnValue = (255 - (65536 * z)) + (255 - (y * 256)) + (255 - x);
+	}
+	return ReturnValue;
+}
+>>>>>>> Debug I2C, rewrite Motors.h
 void I2C_MoveServo(tSensors port, int DaisyChainLevel, int ServoNumber, byte Position)
 {
 	tByteArray I2Crequest;
@@ -72,40 +88,41 @@ void I2C_SetMotorSpeed(tSensors port, int daisychainLevel, int MotorNumber, sbyt
 }
 
 // pass this 1 or 2 for the motor and S[1-4] for the port
-long I2C_GetEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber)
-{
-		daisychainLevel--;
-		//initializes the arrays
-		tByteArray I2Crequest;
-		tByteArray I2Cresponse;
+//long I2C_GetEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber)
+//{
+//		daisychainLevel--;
+//		//initializes the arrays
+//		tByteArray I2Crequest;
+//		tByteArray I2Cresponse;
 
-		//sets the number of bytes to send:
-		I2Crequest[0] = 2;
+//		//sets the number of bytes to send:
+//		I2Crequest[0] = 2;
 
-		//sends the adress as the first byte
-		//daisychain level 0 will add 0, daisychain level 1 will add 2 to get 0x04, etc.
-	  I2Crequest[1] = 0x02 + daisychainLevel*2;
+//		//sends the adress as the first byte
+//		//daisychain level 0 will add 0, daisychain level 1 will add 2 to get 0x04, etc.
+//	  I2Crequest[1] = 0x02 + daisychainLevel*2;
 
-	  //sets the starting position to start sending data at
-	  if (MotorNumber == 1)
-	  {
-	  	I2Crequest[2] = 0x4C;
-		}
-		else
-		{
-		  I2Crequest[2] = 0x50;
-		}
+//	  //sets the starting position to start sending data at
+//	  if (MotorNumber == 1)
+//	  {
+//	  	I2Crequest[2] = 0x4C;
+//		}
+//		else
+//		{
+//		  I2Crequest[2] = 0x50;
+//		}
 
-	  //writes the data, and gets the response
-	  writeI2C(port, I2Crequest, I2Cresponse, 4);
+//	  //writes the data, and gets the response
+//	  writeI2C(port, I2Crequest, I2Cresponse, 4);
+//		//writeDebugStreamLine("%i", I2Cresponse[1]);
+//	  //creates a long out of the bytes
+//	  //note: when debugging with any %i construct, this will be cast to an integer and will overflow at 32767!
+//	  long EncoderValue = (I2Cresponse[0] << 24) + (I2Cresponse[1] << 16) + (I2Cresponse[2] << 8) + (I2Cresponse[3] << 0);
 
-	  //creates a long out of the bytes
-	  //note: when debugging with any %i construct, this will be cast to an integer and will overflow at 32767!
-	  long EncoderValue = (I2Cresponse[0] << 24) + (I2Cresponse[1] << 16) + (I2Cresponse[2] << 8) + (I2Cresponse[3] << 0);
-
-	  //returns the long
-  	return EncoderValue;
-}
+//	  //returns the long
+//	  return EncoderValue;
+//  	//return ConvertBytesToLong(I2Cresponse[0], I2Cresponse[1], I2Cresponse[2], I2Cresponse[3]);
+//}
 
 // motor should be 1 or 2, port should be S[1-4], Input should be the position to move to
 void I2C_SetEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber, long EncoderPosition, byte MotorSpeed)
@@ -132,6 +149,7 @@ void I2C_SetEncoderPosition(tSensors port, int daisychainLevel, int MotorNumber,
 	  I2Crequest[4] = (byte)((EncoderPosition >> 16) & 0x000000ff);
 	  I2Crequest[5] = (byte)((EncoderPosition >> 8) & 0x000000ff);
 	  I2Crequest[6] = (byte)(EncoderPosition & 0x000000ff);
+
 
   	//sets the motor mode
 	  I2Crequest[7] = 0b00000010;
