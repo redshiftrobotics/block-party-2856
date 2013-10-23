@@ -99,7 +99,7 @@ task main()
 			motor[right_front] = -25;*/
 
 			int i = nMotorEncoder[left_back];
-			while (nMotorEncoder[left_back] > i-(1440*0.5))
+			while (nMotorEncoder[left_back] > i-(1440*0.6))
 			{
 				motor[left_back] = -25;
 				motor[left_front] = -25;
@@ -107,8 +107,7 @@ task main()
 				motor[right_front] = -25;
 			}
 
-			int i = nMotorEncoder[left_back];
-			while (nMotorEncoder[left_back] < i+(1440*1.5))
+			while (nMotorEncoder[left_back] < i+(1440*0.09))
 			{
 				motor[left_back] = 25;
 				motor[left_front] = 25;
