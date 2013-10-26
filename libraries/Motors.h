@@ -1,78 +1,93 @@
-#include "Common.h"
 #include "I2C.h"
 
-//Create Task Table
-int Motors_ListLength = 0;
+int Motors_Length = 0;
 
-int Motors_Sensor[10];
+tSensors Motors_Port[10];
 int Motors_DaisyChainLevel[10];
 int Motors_MotorNumber[10];
-long Motors_Encoder[10];
-int Motors_Speed[10];
+byte Motors_Mode[10];
 
-string Motors_Action[10];
 
-//Initialize Task
-task TableExecuter;
-
-bool IsTableExecuterStarted = false;
-
-//Function Starts Tabel Executer
-void Motors_StartTableExecuter()
+byte Motors_ModeByLocation(tSensors Port, int DaisyChainLevel, int MotorNumber)
 {
-	if(IsTableExecuterStarted == false)
+	for(int i = 0; i < Motors_Length; i++)
 	{
-		StartTask(TableExecuter);
-		IsTableExecuterStarted = true;
-	}
-}
-
-//Table Executer Loop
-task TableExecuter()
-{
-	while(true)
-	{
-		for(int i = 0; i < Motors_ListLength; i++)
+		if(Port == Motors_Port[i] && DaisyChainLevel == Motors_DaisyChainLevel[i] && MotorNumber == Motors_MotorNumber[i])
 		{
-			if(Motors_Action[i] == "SetSpeed")
-			{
-				I2C_SetMotorSpeed(Motors_Sensor[i], Motors_DaisyChainLevel[i], Motors_MotorNumber[i], Motors_Speed[i]);
-			}
-			else if(Motors_Action[i] == "SetPosition")
-			{
-				I2C_SetEncoderPosition(Motors_Sensor[i], Motors_DaisyChainLevel[i], Motors_MotorNumber[i], Motors_Encoder[i], Motors_Speed[i]);
-			}
+			return Motors_Mode[i];
 		}
 	}
+	return 0b00000000;
 }
 
-//
-void Motors_SetSpeed(tSensors Sensor, int DaisyChainLevel, int MotorNumber, int MotorSpeed)
+int Motors_ContainsMode(tSensors Port, int DaisyChainLevel, int MotorNumber)
 {
-	Motors_StartTableExecuter();
-
-	Motors_Action[Motors_ListLength] = "SetSpeed";
-	Motors_Sensor[Motors_ListLength] = Sensor;
-	Motors_DaisyChainLevel[Motors_ListLength] = DaisyChainLevel;
-	Motors_MotorNumber[Motors_ListLength] = MotorNumber;
-	Motors_Speed[Motors_ListLength] = MotorSpeed;
-
-	Motors_ListLength++;
+	for(int i = 0; i < Motors_Length; i++)
+	{
+		if(Port == Motors_Port[i] && DaisyChainLevel == Motors_DaisyChainLevel[i] && MotorNumber == Motors_MotorNumber[i])
+		{
+			return i;
+		}
+	}
+	return -1;
 }
 
-void Motors_SetPosition(int DaisyChainLevel, int MotorNumber, long MotorEncoder, int MotorSpeed, tSensors Sensor)
+void Motors_NewMode(tSensors Port, int DaisyChainLevel, int MotorNumber, byte Mode)
 {
-	writeDebugStreamLine("Second Value: %i", 	MotorEncoder);
-	//The above value reads wrong.
+	I2C_SetMode(Port, DaisyChainLevel, MotorNumber, Mode);
 
-	Motors_StartTableExecuter();
+	int IndexOfList = Motors_ContainsMode(Port, DaisyChainLevel, MotorNumber);
+	if(IndexOfList != -1)
+	{
+		Motors_Mode[IndexOfList] = Mode;
+	}
+	else
+	{
+		Motors_DaisyChainLevel[Motors_Length] = DaisyChainLevel;
+		Motors_MotorNumber[Motors_Length] = MotorNumber;
+		Motors_Port[Motors_Length] = Port;
+		Motors_Mode[Motors_Length] = Mode;
+		Motors_Length++;
+	}
+}
 
-	Motors_Action[Motors_ListLength] = "SetPosition";
-	Motors_Sensor[Motors_ListLength] = Sensor;
-	Motors_DaisyChainLevel[Motors_ListLength] = DaisyChainLevel;
-	Motors_MotorNumber[Motors_ListLength] = MotorNumber;
-	Motors_Encoder[Motors_ListLength] = MotorEncoder;
-	Motors_Speed[Motors_ListLength] = MotorSpeed;
+void Motors_SetSpeed(tSensors Port, int DaisyChainLevel, int MotorNumber, int Speed)
+{
+	if(MotorNumber == 1)
+	{
+		Motors_NewMode(Port, DaisyChainLevel, 1, 0b00010001);
+		Motors_NewMode(Port, DaisyChainLevel, 2, Motors_ModeByLocation(Port, DaisyChainLevel, 2) | 0b00010000);
 
-	Motors_ListLength++;
+		I2C_SetMotorSpeed(Port, DaisyChainLevel, MotorNumber, Speed);
+	}
+	else if (MotorNumber == 2)
+	{
+		Motors_NewMode(Port, DaisyChainLevel, 1, Motors_ModeByLocation(Port, DaisyChainLevel, 1) | 0b00010000);
+		Motors_NewMode(Port, DaisyChainLevel, 2, 0b00010001);
+
+		I2C_SetMotorSpeed(Port, DaisyChainLevel, MotorNumber, Speed);
+	}
+}
+
+void Motors_SetPosition(tSensors Port, int DaisyChainLevel, int MotorNumber, long MotorEncoder, int Speed)
+{
+	if(MotorNumber == 1)
+	{
+		Motors_NewMode(Port, DaisyChainLevel, 1, 0b00010010);
+		Motors_NewMode(Port, DaisyChainLevel, 2, Motors_ModeByLocation(Port, DaisyChainLevel, 2) | 0b00010000);
+
+		I2C_SetEncoderPosition(Port, DaisyChainLevel, MotorNumber, MotorEncoder, Speed);
+	}
+	else if (MotorNumber == 2)
+	{
+		Motors_NewMode(Port, DaisyChainLevel, 1, Motors_ModeByLocation(Port, DaisyChainLevel, 1) | 0b00010000);
+		Motors_NewMode(Port, DaisyChainLevel, 2, 0b00010010);
+
+		I2C_SetEncoderPosition(Port, DaisyChainLevel, MotorNumber, MotorEncoder, Speed);
+	}
+}
+
+void Motors_MoveRotations(tSensors Port, int DaisyChainLevel, int MotorNumber, int Rotations, int Speed)
+{
+	Motors_SetPosition(Port, DaisyChainLevel, MotorNumber, I2C_GetEncoderPosition(Port, DaisyChainLevel, MotorNumber) + Rotations * 1440, Speed);
 }
