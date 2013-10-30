@@ -1,6 +1,6 @@
 #pragma config(Sensor, S1,     IR,             sensorI2CCustom)
-#include Motors.h
-#IrLobf.h
+#include "../libraries/Motors.h"
+#include "../libraries/IrLobf.h"
 task main()
 {
 	while (true)

@@ -17,7 +17,7 @@ float LOBF_slope = 0;
 float slopeLOBF (int n, bool debug) //"n" is your sample size and WILL INCREASE THE TIME YOU ENCONTER SLEEP FUNCTIONS
 {
 	if (debug == true) {clearDebugStream();}
-	
+
 	sY = 0;
 	sX = 0;
 	spXYp = 0;
@@ -41,12 +41,12 @@ float slopeLOBF (int n, bool debug) //"n" is your sample size and WILL INCREASE 
 	sXsY = (sX*sY);
 	msXsY = (sXsY)/n;
 	LOBF_slope = (spXYp - msXsY)/(spX2p - mpsXp2);
-	return LOBF_slope
-	
+	return LOBF_slope;
+
 	if (debug == true)
 	{
 		writeDebugStream("0, ");
-		writeDebugStream("slope:%f, ", slopeLOBF);
+		writeDebugStream("slope:%f, ", LOBF_slope);
 		writeDebugStream("sY:%i, ", sY);
 		writeDebugStream("psXp2:%i, ", psXp2);
 		writeDebugStream("mpsXp2:%f, ", mpsXp2);

@@ -36,6 +36,9 @@ DOUBLE CHECK MY LOGIC PLEASE
 3) Find a good standard strength y-intercept value that we can use as a threshold. If we have not reached a certain strenght, we could just be reading a small flat part on the Bell Curve Graph and not actually be at the top of the curve facing the IRBeacon. Or ditch the y-intercept threshold value altogether because it is dependant on the distance between the IRBeacon and the IRSeekerV2 and instead only read the "acs3" data when both "acs2" and "acs4" have gone to zero.
 */
 
+// number of times we've read IR signals
+int readCount = 0;
+
 //X inputs are dependant -> we use integers 0-10 to represent our sample size
 int xInput[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20}; //changed name from yInput
 int sum_x = 210;
@@ -84,8 +87,13 @@ task main()
 			}//APROOVED
 		mean_xTimesy = (sum_x * sum_y)/20; //EQUATION: Top right half
 		slopeLOBF = (sum_xTimesy-mean_xTimesy)/(sum_xSquared - mean_sum_xSquared); //CALCULATE: LOBF slope
+
+		// increment the reading count
+		readCount++;
+
 		if (slopeLOBF<0)
 		{
+			writeDebugStream("%i", readCount);
 			PlayTone(1000,13);
 			// complete stop
 			motor[left_back] = 0;
