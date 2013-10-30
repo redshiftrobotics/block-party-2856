@@ -87,7 +87,8 @@ void Motors_SetPosition(tSensors Port, int DaisyChainLevel, int MotorNumber, lon
 	}
 }
 
-void Motors_MoveRotations(tSensors Port, int DaisyChainLevel, int MotorNumber, int Rotations, int Speed)
+void Motors_MoveRotations(tSensors Port, int DaisyChainLevel, int MotorNumber, float Rotations, int Speed)
 {
-	Motors_SetPosition(Port, DaisyChainLevel, MotorNumber, I2C_GetEncoderPosition(Port, DaisyChainLevel, MotorNumber) + Rotations * 1440, Speed);
+
+	Motors_SetPosition(Port, DaisyChainLevel, MotorNumber, I2C_GetEncoderPosition(Port, DaisyChainLevel, MotorNumber) + (Rotations * 1440), Speed);
 }
