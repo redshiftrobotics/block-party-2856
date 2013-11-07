@@ -27,9 +27,6 @@ Each LOBF calculation uses 10 x-inputs and 10 y-inputs. Each X-input is a readin
 Isaac, AJ, Dale, and I recognized a nice bell-curve shape when strenght over time from the IR "acs3" signal is graphed. Using the LOBF formula found on the aformentioned URL, we calculate slope. This slope, should approach a value of zero, if not be at zero, only at the top of the bell curve when the IRSeekerV2 is pointing at the IRBeacon. The calculated y-intercept can serve as a threshold for the IR signal however, notice it is dependant on the distance between the IRBeacon and IRSeekerV2
 */
 
-// program parameters
-const bool turnAtIrBeacon = true;
-
 int acS1, acS2, acS3, acS4, acS5 = 0;
 int n = 10; //Change sample size
 
