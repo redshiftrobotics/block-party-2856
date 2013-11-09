@@ -18,6 +18,7 @@
 
 // program parameters
 const int defaultDriveSpeed = 25;
+const int threshold = 8;
 
 #include "JoystickDriver.c"
 #include "../libraries/I2C.h"
@@ -31,11 +32,33 @@ task main()
 		getJoystickSettings(joystick);
 
 		// calculate the drive speed
-		int driveSpeedBase = defaultDriveSpeed + (joystick.joy1_x2*2);
+		int driveSpeedBase = defaultDriveSpeed + (joystick.joy1_y2/3);
+
+		// don't calculate a negative drive speed
+		if (drivespeedBase < 5) drivespeedBase = 5;
+
+		int driveSpeedRight, driveSpeedLeft = driveSpeedBase;
+
+		// decide if we're going to be driving forward at all
+		if (abs(joystick.joy1_y1) < threshold)
+		{
+			driveSpeedRight = 0;
+			driveSpeedLeft = 0;
+		}
 
 		// calculate the two sides' drive
-		int driveSpeedRight = driveSpeedBase-joystick.joy1_y1;
-		int driveSpeedLeft = driveSpeedBase+joystick.joy1_y1;
+		driveSpeedRight = driveSpeedRight-(joystick.joy1_x1/3);
+		driveSpeedLeft = driveSpeedLeft+(joystick.joy1_x1/3);
+
+		// decide if we're going to be driving backwards
+		if (joystick.joy1_y1 > 0)
+		{
+			driveSpeedRight = -driveSpeedRight;
+			driveSpeedLeft = -driveSpeedLeft;
+		}
+
+		// account for the right motor set being the inverse
+		driveSpeedRight = -driveSpeedRight;
 
 		I2C_SetMotorSpeed(S1, 2, 1, driveSpeedRight);
 		I2C_SetMotorSpeed(S1, 2, 2, driveSpeedLeft);
