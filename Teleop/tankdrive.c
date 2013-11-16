@@ -11,20 +11,23 @@
 
 	IMPORTANT: DESIGNED FOR VARSITY'S JARVIS CHASSIS.
 
+	TODO: add support for speed modifiers.
+
 */
 
 // program parameters
 const int deadband = 8;
+const int baseJoyModifier = 1.5;
 
+int userJoyModifier = 1;
 int rightpower, leftpower = 0;
-int rightpowerGlobal, leftpowerGlobal = 0;
 
 task main()
 {
 	while(true)
 	{
-		rightpower = joystick.joy1_y2 / 1.5;
-		leftpower = joystick.joy1_y1 / 1.5;
+		rightpower = joystick.joy1_y2 / baseJoyModifier * userJoyModifier;
+		leftpower = joystick.joy1_y1 / baseJoyModifier * userJoyModifier;
 
 		// deadband
 		if (abs(rightpower) < deadband)
