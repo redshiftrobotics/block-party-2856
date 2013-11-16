@@ -8,13 +8,15 @@ Basic tankdrive.
 
 Controller 1 has the standard joystick to wheel mappings. Left joy maps to the left wheel; same for the right.
 
+Button 4 (Y) is a toggle for Slow Mode. Slow Mode cuts all input from the driver's game controller in half, allowing fine motor movement.
+
 ## Features
 
-Nothing special.
+"Slow mode" for fine motor movements. See the Controls section for details
 
 ## Planned features
 
-Global drive speed manipulation.
+Arm manipulation. Duh.
 
 ## Calculations used
 

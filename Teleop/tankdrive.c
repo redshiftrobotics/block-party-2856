@@ -19,13 +19,19 @@
 const int deadband = 8;
 const int baseJoyModifier = 1.5;
 
-int userJoyModifier = 1;
+float userJoyModifier = 1;
 int rightpower, leftpower = 0;
 
 task main()
 {
 	while(true)
 	{
+		// switch the drive multiplier mode
+		if (joy1Btn(4) == 1) {
+			if (userJoyModifier == 1) userJoyModifier = 0.5;
+			if (userJoyModifier == 0.5) userJoyModifier = 1;
+		}
+
 		rightpower = joystick.joy1_y2 / baseJoyModifier * userJoyModifier;
 		leftpower = joystick.joy1_y1 / baseJoyModifier * userJoyModifier;
 
