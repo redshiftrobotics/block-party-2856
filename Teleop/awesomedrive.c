@@ -35,27 +35,26 @@ task main()
 		int driveSpeedBase = defaultDriveSpeed + (joystick.joy1_y2/3);
 
 		// don't calculate a negative drive speed
-		if (drivespeedBase < 5) drivespeedBase = 5;
-
-		int driveSpeedRight, driveSpeedLeft = driveSpeedBase;
+		if (driveSpeedBase < 5) driveSpeedBase = 5;
 
 		// decide if we're going to be driving forward at all
 		if (abs(joystick.joy1_y1) < threshold)
 		{
-			driveSpeedRight = 0;
-			driveSpeedLeft = 0;
+			driveSpeedBase = 0;
 		}
-
-		// calculate the two sides' drive
-		driveSpeedRight = driveSpeedRight-(joystick.joy1_x1/3);
-		driveSpeedLeft = driveSpeedLeft+(joystick.joy1_x1/3);
 
 		// decide if we're going to be driving backwards
 		if (joystick.joy1_y1 > 0)
 		{
-			driveSpeedRight = -driveSpeedRight;
-			driveSpeedLeft = -driveSpeedLeft;
+			driveSpeedBase = -driveSpeedBase;
 		}
+
+		// right and left drive speeds inherit from the base drive speed
+		int driveSpeedRight, driveSpeedLeft = driveSpeedBase;
+
+		// calculate the two sides' drive
+		//driveSpeedRight = driveSpeedRight-(joystick.joy1_x1/3);
+		//driveSpeedLeft = driveSpeedLeft+(joystick.joy1_x1/3);
 
 		// account for the right motor set being the inverse
 		driveSpeedRight = -driveSpeedRight;
