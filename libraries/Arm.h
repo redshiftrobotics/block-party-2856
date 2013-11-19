@@ -12,7 +12,7 @@ int Arm_Speed = 0;
 
 void Arm_SetSpeed(int Speed)
 {
-	//only lets you change the speed if the robot is initialzied
+	//only lets you change the speed if the robot is initialized
 	if(Arm_Initialized)
 	{
 		Arm_Speed = Speed;
