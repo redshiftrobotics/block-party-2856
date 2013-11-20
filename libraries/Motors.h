@@ -19,7 +19,8 @@ int _Motors_GetCanonicalMotorId(tSensors SensorPort, int DaisyChainLevel, int Mo
 	int id = 0;
 
 	// get a port id that we can work with
-	int port = _I2C_GetIntFromPort(SensorPort);
+	// FIXME
+	int port = 1; //_I2C_GetIntFromPort(SensorPort);
 
 	// add in the daisychain level information
 	id += (DaisyChainLevel-1)*2;
@@ -29,6 +30,8 @@ int _Motors_GetCanonicalMotorId(tSensors SensorPort, int DaisyChainLevel, int Mo
 
 	// add in the port information
 	id += (port-1)*8;
+
+	return id;
 }
 
 void Motors_SetSpeed(tSensors Port, int DaisyChainLevel, int MotorNumber, int Speed)
