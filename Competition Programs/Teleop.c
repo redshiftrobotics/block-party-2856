@@ -60,7 +60,7 @@ task main()
 		else
 		{
 			//moves left side
-			if(abs(joystick.joy1_y1) > 5)
+			if(abs(joystick.joy1_y1) > 10)
 			{
 				MoveLeft((joystick.joy1_y1 / 1.28) * Multiplier);
 			}
@@ -70,7 +70,7 @@ task main()
 			}
 
 			//moves right side
-			if(abs(joystick.joy1_y2) > 5)
+			if(abs(joystick.joy1_y2) > 10)
 			{
 				MoveRight((joystick.joy1_y2 / 1.28) * Multiplier);
 			}
@@ -80,7 +80,7 @@ task main()
 			}
 		}
 		//moves arm
-		if(abs(joystick.joy2_y1) > 5)
+		if(abs(joystick.joy2_y1) > 10)
 		{
 			MoveArm(-(joystick.joy2_y1 / 1.28));
 		}
@@ -99,7 +99,7 @@ task main()
 		//SpinServo(255);
 		//}
 
-		if(abs(joystick.joy2_y2) > 5)
+		if(abs(joystick.joy2_y2) > 10)
 		{
 		SpinServo(((joystick.joy2_y2 + 127) / 1.28));
 		}
