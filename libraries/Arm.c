@@ -9,12 +9,12 @@ int Arm_Speed = 0;
 
 void Arm_SetSpeed(int Speed)
 {
-	//only lets you change the speed if the robot is initialzied
-	if(Arm_Initialized)
-	{
-
+	hogCPU();
+	//if(Arm_Initialized)
+	//{
 		Arm_Speed = Speed;
-	}
+	//}
+	releaseCPU();
 }
 
 void Arm_Update()
@@ -26,7 +26,7 @@ void Arm_Update()
 	//if the arm isn't initialized yet
 	if(!Arm_Initialized)
 	{
-
+		writeDebugStreamLine("Reseting");
 		//set the speed to 10
 		I2C_SetMotorSpeed(S1, 1, 1, 15);
 
@@ -34,9 +34,9 @@ void Arm_Update()
 		if(SensorValue[S4] == 1)
 		{
 			Arm_Initialized = true;
-			Arm_Speed = 0;
+			//Arm_Speed = 0;
 
-			Arm_BottomEncoderLimit = Arm_Encoder;
+			Arm_BottomEncoderLimit = Arm_Encoder - (.2 * 1440);
 			Arm_TopEncoderLimit = Arm_Encoder - (10 * 1440);
 
 			writeDebugStreamLine("Bottom Encoder: %i", Arm_BottomEncoderLimit);
