@@ -7,21 +7,50 @@
 		<script type="text/javascript" src="/home/benkahle/Documents/saasrobotics/Robotics2013-14/EasyCBrotherhood/javascript.js"></script>
 	</head>
 	<body>
-		<div class="global-header"></div>
+		<div class="global-header">
+			<div class="title">Welcome to EasyC!</div>
+			<div id="compile">Compile</div>
+		</div>
 		<div class="content">
 			<div id="motor-config" class="config-bar">
 				<h2 class="title">Motor Config:</h2>
 			</div>
 			<div class="panel-left">
 				<div id="toolbox" class="toolbox">
-					<div class="command" draggable="true">A</div>
-					<div class="command" draggable="true">B</div>
-					<div class="command" draggable="true">C</div>
+					<div class="command sleep" draggable="true">
+						<div class="title">Sleep</div>
+						<div class="input-text">Time: </div>
+						<input class="sleep-value" placeholder="(seconds)"/>
+					</div>
+					<div class="command motor-speed" draggable="true">
+						<div class="title">Motor Speed</div>
+						<div class="input-text">MotorID: </div>
+						<input class="motor-id" placeholder="motor#"/>
+						<div class="input-text">Speed: </div>
+						<input class="speed-value" placeholder="(%)"/>
+					</div>
+					<div class="command motor-rotation" draggable="true">
+						<div class="title">Motor Rotations</div>
+						<div class="input-text">MotorID: </div>
+						<input class="motor-id" placeholder="motor#"/>
+						<div class="input-text">Rotations: </div>
+						<input class="rotation-value" placeholder="# of rotations"/>
+						<div class="input-text">Speed: </div>
+						<input class="speed-value" placeholder="# of rotations"/>
+					</div>
+					<div class="command move-servo" draggable="true">
+						<div class="title">Motor Rotations</div>
+						<div class="input-text">MotorID: </div>
+						<input class="motor-id" placeholder="motor#"/>
+						<div class="input-text">Value: </div>
+						<input class="rotation-value" placeholder="(0-256)"/>
+					</div>
+					<div id="trash" draggable="true"></div>
 				</div>
-				<div class="trash-bar">
-					<div id="trash" draggable="true">Trash</div>
-				</div>
-				<div id="program" class="program-window">
+				<div class="program-window">
+					<h2>Program:</h2>
+					<div id="program">
+					</div>
 				</div>
 			</div>
 			<div class="panel-right">
