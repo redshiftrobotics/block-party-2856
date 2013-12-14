@@ -2,18 +2,46 @@
 <html>
 	<head>
 		<title>EasyC | SAAS - Robotics </title>
-		<link rel="stylesheet" type="text/css" href="/home/benkahle/Documents/saasrobotics/Robotics2013-14/EasyCBrotherhood/style.css">
+		<link rel="stylesheet" type="text/css" href="C:\Users\SAAS Student\Documents\GitHub\Robotics2013-14\EasyCBrotherhood\style.css">
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-		<script type="text/javascript" src="/home/benkahle/Documents/saasrobotics/Robotics2013-14/EasyCBrotherhood/javascript.js"></script>
-	</head>
+		</head>
 	<body>
 		<div class="global-header">
 			<div class="title">Welcome to EasyC!</div>
-			<div id="compile">Compile</div>
+			<div id="compile" onclick = "Compile();">Compile</div>
 		</div>
 		<div class="content">
 			<div id="motor-config" class="config-bar">
 				<h2 class="title">Motor Config:</h2>
+				<div class="command" id = "motor-id-1" draggable="false">
+					<div class="title">ID One</div>
+					<div class="input-text">Port: </div>
+					<input class="motor-port" placeholder="motor power"/>
+					<div class="input-text">Daisychain: </div>
+					<input class="motor-daisychain" placeholder="daisy chain number"/>
+					<div class="input-text">Motor Number: </div>
+					<input class="motor-number" value = "1" placeholder="motor number"/>
+				</div>
+				
+				<div class="command" id = "motor-id-2" draggable="false">
+					<div class="title">ID Two</div>
+					<div class="input-text">Port: </div>
+					<input class="motor-port" placeholder="motor power"/>
+					<div class="input-text">Daisychain: </div>
+					<input class="motor-daisychain" placeholder="daisy chain number"/>
+					<div class="input-text">Motor Number: </div>
+					<input class="motor-number"  placeholder="motor number"/>
+				</div>
+				
+				<div class="command" id = "motor-id-3" draggable="false">
+					<div class="title">ID Three</div>
+					<div class="input-text">Port: </div>
+					<input class="motor-port" placeholder="motor power"/>
+					<div class="input-text">Daisychain: </div>
+					<input class="motor-daisychain" placeholder="daisy chain number"/>
+					<div class="input-text">Motor Number: </div>
+					<input class="motor-number" placeholder="motor number"/>
+				</div>
 			</div>
 			<div class="panel-left">
 				<div id="toolbox" class="toolbox">
@@ -56,5 +84,6 @@
 			<div class="panel-right">
 			</div>
 		</div>
+		<script type="text/javascript" src="C:\Users\SAAS Student\Documents\GitHub\Robotics2013-14\EasyCBrotherhood\javascript.js"></script>
 	</body>
 </html>

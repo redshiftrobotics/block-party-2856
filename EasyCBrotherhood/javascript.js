@@ -1,3 +1,27 @@
+var IDAttributes = new Array();
+
+
+
+function CalculateIDAttributes()
+{
+	IDAttributes = [];
+	for(i = 0; i < $("#motor-config").children(".command").length; i++)
+	{
+		var Child = $("#motor-id-" + (i + 1));
+		var MotorPort = Child.children(".motor-port").value;
+		
+		alert(Child.children(".motor-port").value);
+		var MotorDaisychain = Child.children(".motor-daisychain").value;
+		var MotorNumber = Child.children(".motor-number").value;
+		IDAttributes.push([MotorPort, MotorDaisychain, MotorNumber]);
+	}
+}
+
+function Compile()
+{
+	CalculateIDAttributes();
+}
+
 var dragSrcEl = null;
 
 function handleDragStart(e) {
