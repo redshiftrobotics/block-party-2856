@@ -4,22 +4,25 @@ function getMotorConfig()
   var motorConfigs = $("#motor-config").children(".command");
 	for(i = 0; i < motorConfigs.length; i++)
 	{
-		var motorPort = motorConfigs[i].children(".motor-port").value;
-		var motorDaisychain = motorConfigs[i].children(".motor-daisychain").value;
-		var motorNumber = motorConfigs[i].children(".motor-number").value;
-		motors.push({motorPort, motorDaisychain, motorNumber});
+    var current = $(motorConfigs[i]);
+    var motorId = i+1;
+		var motorPort = parseInt(current.children(".motor-port")[0].value);
+		var motorDaisychain = parseInt(current.children(".motor-daisychain")[0].value);
+		var motorNumber = parseInt(current.children(".motor-number")[0].value);
+		motors.push({
+      motorId: motorId,
+      port: motorPort,
+      daisy: motorDaisychain,
+      number: motorNumber
+    });
 	}
-}
-
-function Compile()
-{
-	CalculateIDAttributes();
 }
 
 var dragSrcEl = null;
 var headerString = $("#program-header-text").value;
 
 $("#compile").click(function() {
+  getMotorConfig();
   parseProgram();
 })
 
