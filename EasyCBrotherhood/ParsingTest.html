@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		<div id = "Program">
+			<div id = "Sleep">
+				<p>1</p>
+			</div>
+		</div>
+	</body>
+	<script>
+	function ParseProgram()
+	{
+		var ElementList = document.getElementById("Program").children; 
+		
+		for(i = 0; i < ElementList.length; i++)
+		{
+			ValueList = ElementList[i].children;
+			
+			if(ElementList[i].getAttribute('id') == "Sleep")
+			{
+				alert(ValueList[0].innerHTML);
+			}
+		}
+	}
+	
+	ParseProgram();
+	</script>
+</html>
