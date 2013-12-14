@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		<div id = "Program">
+			<div id = "Sleep">
+				<p>1</p>
+			</div>
+			<div id = "MotorSpeed">
+				<p>1</p>
+				<p>1</p>
+				<p>1</p>
+				<p>1</p>
+			</div>
+		</div>
+	</body>
+	<script>
+	function ParseProgram()
+	{
+		var ElementList = document.getElementById("Program").children; 
+		
+		for(i = 0; i < ElementList.length; i++)
+		{
+			ValueList = ElementList[i].children;
+			
+			if(ElementList[i].getAttribute('id') == "Sleep")
+			{
+				alert("Sleep(" + ValueList[0].innerHTML + ")");
+			}
+			
+			if(ElementList[i].getAttribute('id') == "MotorSpeed")
+			{
+				alert("Motors_MoveSpeed(S" + ValueList[0].innerHTML + ", " + ValueList[1].innerHTML + ", " + ValueList[2].innerHTML + ", " + ValueList[3].innerHTML + ")");
+			}
+		}
+	}
+	
+	ParseProgram();
+	</script>
+</html>
