@@ -1,0 +1,23 @@
+<html>
+	<head>
+	</head>
+	<body>
+
+	</body>
+	<script>
+	function ParseProgram()
+	{
+		
+		var ElementList = document.getElementById("Program").children; 
+		
+		for(i = 0; i < ElementList.length; i++)
+		{
+			ValueList = ElementList[i].children
+			if(ElementList[i].getAttribute('id') == "Sleep")
+			{
+				alert("Sleep");'
+			}
+		}
+	}
+	</script>
+</html>
