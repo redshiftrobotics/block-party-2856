@@ -19,19 +19,22 @@ function getMotorConfig()
 }
 
 var dragSrcEl = null;
-var headerString = $("#program-header-text").value;
 
 $("#compile").click(function() {
   getMotorConfig();
   parseProgram();
 })
 
-function getMotorValues(motorId) {
-  window.motors.forEach(function(motor,index,motorList) {
-    if (motor.motorId === motorId) {
-      return motor;
+function getMotorValues(id) {
+  for (var i=0; i<motors.length;i++) {
+    if (motors[i].motorId === id) {
+      if (isNaN(motors[i].port) || isNaN(motors[i].daisy) || isNaN(motors[i].number)) {
+        alert("Motor "+id+" is used, but is not configured correctly!");
+        return null;
+      } 
+      return motors[i];
     }
-  })
+  }
 }
 
 function addSleep(time) {
@@ -55,8 +58,9 @@ function addMoveServo(motorId, position) {
 
 function validateValues(element, values) {
   if (values.sleep) {
-    if (!typeof values.sleep === "number" || values.sleep < 0) {
-      alert("Command: "+element+"has an invalid parameter");
+    if (isNaN(values.sleep) || values.sleep < 0) {
+      console.log(element[0]);
+      alert("Command: "+element+" has an invalid sleep time (positive floats allowed)");
       return false;
     }
   }
@@ -66,23 +70,41 @@ function validateValues(element, values) {
       if (window.motors[i].motorId === values.motorId) {
         motorValid = true;
       }
-      if (!motorValid) {
-        return false;
-      }
+    }
+    if (!motorValid) {
+      alert("Command: "+element+" has an invalid motorId");
+      return false;
     }
   }
-  //TODO: Add more validation cases for the rest of the values
+  if (values.speed) {
+    if (isNaN(values.speed) || values.speed < -100 || values.speed > 100) {
+      alert("Command: "+element+" has an invalid speed value (-100 through 100 integer allowed)");
+      return false;
+    }
+  }
+  if (values.rotations) {
+    if (isNaN(values.rotations)) {
+      alert("Command: "+element+" has an invalid rotation number (positive or negative floats allowed)");
+      return false;
+    }
+  }
+  if (values.position) {
+    if (isNaN(values.position) || values.position < 0 || values.position > 256) {
+      alert("Command: "+element+" has an invalid position number (0-256 integers allowed)")
+    }
+  }
   return true;
 }
 
 function parseProgram() {
-  var programString = "";
+  programString = $("#program-header-text").text();
   
-  var elementList = $(".panel-right").children(); 
-  elementList.forEach(function(command, index, list) {
+  var elementList = $("#workbench").children();
+  elementList.each(function() {
+    var command = $(this);
     switch (command.attr("command-type")) {
       case "sleep":
-        var sleepTime = command.children(".sleep-value").first().value;
+        var sleepTime = parseFloat(command.children(".sleep-value")[0].value);
         var values = {
           sleep: sleepTime
         };
@@ -92,8 +114,8 @@ function parseProgram() {
       break;
 
       case "motor-speed":
-        var motorId = command.children(".motor-id").first().value;
-        var speed = command.children(".speed-value").first().value;
+        var motorId = parseInt(command.children(".motor-id")[0].value);
+        var speed = parseInt(command.children(".speed-value")[0].value);
         var values = {
           motorId: motorId,
           speed: speed
@@ -104,9 +126,9 @@ function parseProgram() {
       break;
 
       case "motor-rotation":
-        var motorId = command.children(".motor-id").first().value;
-        var speed = command.children(".speed-value").first().value;
-        var rotations = command.children(".rotation-value").first().value;
+        var motorId = parseInt(command.children(".motor-id")[0].value);
+        var speed = parseInt(command.children(".speed-value")[0].value);
+        var rotations = parseFloat(command.children(".rotation-value")[0].value);
         var values = {
           motorId: motorId,
           speed: speed,
@@ -118,8 +140,8 @@ function parseProgram() {
       break;
 
       case "move-servo":
-        var motorId = command.children(".motor-id").first().value;
-        var position = command.children(".position-value").first().value;
+        var motorId = parseInt(command.children(".motor-id")[0].value);
+        var position = parseInt(command.children(".position-value")[0].value);
         var values = {
           motorId: motorId,
           position: position
@@ -133,14 +155,16 @@ function parseProgram() {
       break;
     }
   });
-  $("#program").value = programString;
+  console.log(programString);
+  $("#program").text(programString);
+  $("body, html").animate({scrollTop: $(".program-window").offset().top-45});
 }
 
 function handleDragStart(e) {
   // Target (this) element is the source node.
   dragSrcEl = this;
-  // e.dataTransfer.effectAllowed = 'move';
-  // e.dataTransfer.setData('text/html', this.innerHTML);
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/html', this.innerHTML);
 }
 
 function handleDrop(e) {
