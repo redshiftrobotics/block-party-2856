@@ -137,10 +137,10 @@ function parseProgram() {
 }
 
 function handleDragStart(e) {
-  // Target (this) element is the source node.
-  dragSrcEl = this;
-  // e.dataTransfer.effectAllowed = 'move';
-  // e.dataTransfer.setData('text/html', this.innerHTML);
+	// Target (this) element is the source node.
+	dragSrcEl = this;
+	e.dataTransfer.effectAllowed = 'move';
+	e.dataTransfer.setData('text/html', this.innerHTML);
 }
 
 function handleDrop(e) {
@@ -149,9 +149,10 @@ function handleDrop(e) {
     e.stopPropagation(); // Stops some browsers from redirecting.
   }
   
-  if(this == document.getElementById("Trash"))
+  if(dragSrcEl == document.getElementById("trash"))
   {
-    dragSrcEl.remove();
+	alert("Trashing me");
+    this.remove();
   }
   else if (dragSrcEl != this && dragSrcEl.parentNode.getAttribute('id') == "Program")
   {
@@ -207,12 +208,12 @@ function addDrop(e) {
   }
   
   var node = dragSrcEl.cloneNode(true);
-  $(".panel-right").appendChild(node);
+  $(".panel-right")[0].appendChild(node);
 
-  node.on('dragstart', handleDragStart, false);
-  node.on('dragover', handleDragOver, false);
-  node.on('dragleave', handleDragLeave, false);
-  node.on('drop', handleDrop, false);
+  node.on('dragstart', handleDragStart);
+  node.on('dragover', handleDragOver);
+  node.on('dragleave', handleDragLeave);
+  node.on('drop', handleDrop);
   
   return false;
 }
@@ -235,18 +236,18 @@ function addDragLeave(e) {
 var trashElement = $("#trash");
 var add = $(".panel-right");
 
-trashElement.on('dragover', trashDragOver, false);
-trashElement.on('drop', trashDrop, false);
+trashElement.bind('dragover', trashDragOver);
+trashElement.bind('drop', trashDrop);
 
-add.on('dragover', addDragOver, false);
-add.on('drop', addDrop, false);
-add.on('dragleave', addDragLeave, false);
+add.bind('dragover', addDragOver);
+add.bind('drop', addDrop);
+add.bind('dragleave', addDragLeave);
 
-var commands = $('.command');
-for(var i=0;i<commands.length;i++) {
-  $(commands[i]).on('dragstart', handleDragStart);
-  $(commands[i]).on('dragover', handleDragOver);
-  $(commands[i]).on('dragleave', handleDragLeave);
-  $(commands[i]).on('dragend', handleDrop);
+var commandblocks = $('.command');
+for(var i=0;i<commandblocks.length;i++) {
+  $(commandblocks[i]).on('dragstart', handleDragStart);
+  $(commandblocks[i]).on('dragover', handleDragOver);
+  $(commandblocks[i]).on('dragleave', handleDragLeave);
+  $(commandblocks[i]).on('dragend', handleDrop);
 };
 

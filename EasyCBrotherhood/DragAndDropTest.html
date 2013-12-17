@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>EasyC | SAAS - Robotics </title>
-		<link rel="stylesheet" type="text/css" href="/home/benkahle/Documents/saasrobotics/Robotics2013-14/EasyCBrotherhood/style.css">
+		<link rel="stylesheet" type="text/css" href="C:\Users\SAAS Student\Documents\GitHub\Robotics2013-14\EasyCBrotherhood\style.css">
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 	</head>
 	<body>
@@ -13,16 +13,16 @@
 		<div class="content">
 			<div id="motor-config" class="config-bar">
 				<h2 class="title">Motor Config:</h2>
-				<div class="command" id="motor-id-1" draggable="false">
+				<div class="command" id="motor-id-1">
 					<div class="title">ID: 1</div>
 					<div class="input-text">Port: </div>
 					<input class="motor-port" placeholder="motor power"/>
 					<div class="input-text">Daisychain: </div>
 					<input class="motor-daisychain" placeholder="daisy chain number"/>
 					<div class="input-text">Motor Number: </div>
-					<input class="motor-number" value = "1" placeholder="motor number"/>
+					<input class="motor-number" placeholder="motor number"/>
 				</div>
-				<div class="command" id="motor-id-2" draggable="false">
+				<div class="command" id="motor-id-2">
 					<div class="title">ID: 2</div>
 					<div class="input-text">Port: </div>
 					<input class="motor-port" placeholder="motor power"/>
@@ -31,7 +31,7 @@
 					<div class="input-text">Motor Number: </div>
 					<input class="motor-number"  placeholder="motor number"/>
 				</div>
-				<div class="command" id="motor-id-3" draggable="false">
+				<div class="command" id="motor-id-3">
 					<div class="title">ID: 3</div>
 					<div class="input-text">Port: </div>
 					<input class="motor-port" placeholder="motor power"/>
@@ -43,19 +43,19 @@
 			</div>
 			<div class="panel-left">
 				<div id="toolbox" class="toolbox">
-					<div class="command" command-type="sleep">
+					<div class="command" draggable="true" command-type="sleep">
 						<div class="title">Sleep</div>
 						<div class="input-text">Time: </div>
 						<input class="sleep-value" placeholder="(seconds)"/>
 					</div>
-					<div class="command draggable" command-type="motor-speed">
+					<div class="command draggable" draggable="true" command-type="motor-speed">
 						<div class="title">Motor Speed</div>
 						<div class="input-text">MotorID: </div>
 						<input class="motor-id" placeholder="motor#"/>
 						<div class="input-text">Speed: </div>
 						<input class="speed-value" placeholder="(%)"/>
 					</div>
-					<div class="command draggable" command-type="motor-rotation">
+					<div class="command draggable" draggable="true" command-type="motor-rotation">
 						<div class="title">Motor Rotations</div>
 						<div class="input-text">MotorID: </div>
 						<input class="motor-id" placeholder="motor#"/>
@@ -64,7 +64,7 @@
 						<div class="input-text">Speed: </div>
 						<input class="speed-value" placeholder="# of rotations"/>
 					</div>
-					<div class="command draggable" command-type="move-servo">
+					<div class="command draggable" draggable="true" command-type="move-servo">
 						<div class="title">Move Servo</div>
 						<div class="input-text">MotorID: </div>
 						<input class="motor-id" placeholder="motor#"/>
@@ -79,7 +79,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="panel-right droppable">
+			<div class="panel-right droppable" id = "Program">
 			</div>
 		</div>
 		<p hidden="true" id="program-header-text">
@@ -685,6 +685,6 @@
 				I2C_MoveServo(Port, DaisyChainLevel, MotorNumber, Position);
 			}
 		</p>
-		<script type="text/javascript" src="/home/benkahle/Documents/saasrobotics/Robotics2013-14/EasyCBrotherhood/javascript.js"></script>
+		<script type="text/javascript" src="C:\Users\SAAS Student\Documents\GitHub\Robotics2013-14\EasyCBrotherhood\javascript.js"></script>
 	</body>
 </html>
