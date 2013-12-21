@@ -19,19 +19,22 @@ function getMotorConfig()
 }
 
 var dragSrcEl = null;
-var headerString = $("#program-header-text").value;
 
 $("#compile").click(function() {
   getMotorConfig();
   parseProgram();
 })
 
-function getMotorValues(motorId) {
-  window.motors.forEach(function(motor,index,motorList) {
-    if (motor.motorId === motorId) {
-      return motor;
+function getMotorValues(id) {
+  for (var i=0; i<motors.length;i++) {
+    if (motors[i].motorId === id) {
+      if (isNaN(motors[i].port) || isNaN(motors[i].daisy) || isNaN(motors[i].number)) {
+        alert("Motor "+id+" is used, but is not configured correctly!");
+        return null;
+      } 
+      return motors[i];
     }
-  })
+  }
 }
 
 function addSleep(time) {
@@ -55,8 +58,9 @@ function addMoveServo(motorId, position) {
 
 function validateValues(element, values) {
   if (values.sleep) {
-    if (!typeof values.sleep === "number" || values.sleep < 0) {
-      alert("Command: "+element+"has an invalid parameter");
+    if (isNaN(values.sleep) || values.sleep < 0) {
+      console.log(element[0]);
+      alert("Command: "+element+" has an invalid sleep time (positive floats allowed)");
       return false;
     }
   }
@@ -66,23 +70,41 @@ function validateValues(element, values) {
       if (window.motors[i].motorId === values.motorId) {
         motorValid = true;
       }
-      if (!motorValid) {
-        return false;
-      }
+    }
+    if (!motorValid) {
+      alert("Command: "+element+" has an invalid motorId");
+      return false;
     }
   }
-  //TODO: Add more validation cases for the rest of the values
+  if (values.speed) {
+    if (isNaN(values.speed) || values.speed < -100 || values.speed > 100) {
+      alert("Command: "+element+" has an invalid speed value (-100 through 100 integer allowed)");
+      return false;
+    }
+  }
+  if (values.rotations) {
+    if (isNaN(values.rotations)) {
+      alert("Command: "+element+" has an invalid rotation number (positive or negative floats allowed)");
+      return false;
+    }
+  }
+  if (values.position) {
+    if (isNaN(values.position) || values.position < 0 || values.position > 256) {
+      alert("Command: "+element+" has an invalid position number (0-256 integers allowed)")
+    }
+  }
   return true;
 }
 
 function parseProgram() {
-  var programString = "";
+  programString = $("#program-header-text").text();
   
-  var elementList = $(".panel-right").children(); 
-  elementList.forEach(function(command, index, list) {
+  var elementList = $("#workbench").children();
+  elementList.each(function() {
+    var command = $(this);
     switch (command.attr("command-type")) {
       case "sleep":
-        var sleepTime = command.children(".sleep-value").first().value;
+        var sleepTime = parseFloat(command.children(".sleep-value")[0].value);
         var values = {
           sleep: sleepTime
         };
@@ -92,8 +114,8 @@ function parseProgram() {
       break;
 
       case "motor-speed":
-        var motorId = command.children(".motor-id").first().value;
-        var speed = command.children(".speed-value").first().value;
+        var motorId = parseInt(command.children(".motor-id")[0].value);
+        var speed = parseInt(command.children(".speed-value")[0].value);
         var values = {
           motorId: motorId,
           speed: speed
@@ -104,9 +126,9 @@ function parseProgram() {
       break;
 
       case "motor-rotation":
-        var motorId = command.children(".motor-id").first().value;
-        var speed = command.children(".speed-value").first().value;
-        var rotations = command.children(".rotation-value").first().value;
+        var motorId = parseInt(command.children(".motor-id")[0].value);
+        var speed = parseInt(command.children(".speed-value")[0].value);
+        var rotations = parseFloat(command.children(".rotation-value")[0].value);
         var values = {
           motorId: motorId,
           speed: speed,
@@ -118,8 +140,8 @@ function parseProgram() {
       break;
 
       case "move-servo":
-        var motorId = command.children(".motor-id").first().value;
-        var position = command.children(".position-value").first().value;
+        var motorId = parseInt(command.children(".motor-id")[0].value);
+        var position = parseInt(command.children(".position-value")[0].value);
         var values = {
           motorId: motorId,
           position: position
@@ -133,99 +155,110 @@ function parseProgram() {
       break;
     }
   });
-  $("#program").value = programString;
+  console.log(programString);
+  $("#program").text(programString);
+  $("body, html").animate({scrollTop: $(".program-window").offset().top-45});
 }
 
-function handleDragStart(e) {
-	// Target (this) element is the source node.
-	dragSrcEl = this;
-	e.dataTransfer.effectAllowed = 'move';
-	e.dataTransfer.setData('text/html', this.innerHTML);
-}
+function programDrop(e) {
+  // this/e.target is current target element.
 
-function handleDrop(e) {
-  this.classList.remove('selected');
   if (e.stopPropagation) {
     e.stopPropagation(); // Stops some browsers from redirecting.
   }
-  
-  if(dragSrcEl == document.getElementById("trash"))
-  {
-	alert("Trashing me");
-    this.remove();
-  }
-  else if (dragSrcEl != this && dragSrcEl.parentNode.getAttribute('id') == "Program")
-  {
+
+  // Don't do anything if dropping the same column we're dragging.
+  if (dragSrcEl != this) {
+    // Set the source column's HTML to the HTML of the column we dropped on.
     dragSrcEl.innerHTML = this.innerHTML;
     this.innerHTML = e.dataTransfer.getData('text/html');
   }
+
   return false;
 }
 
-function handleDragOver(e) {
+function programDragOver(e) {
+  this.classList.add('selected');
+  
   if (e.preventDefault) {
     e.preventDefault(); // Necessary. Allows us to drop.
   }
   e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object. 
-  if(this != dragSrcEl && dragSrcEl.parentNode.getAttribute('id') == "Program")
-  {
-    this.classList.add('selected');
-  }
   return false;
 }
   
-function handleDragLeave(e) {
-  if(dragSrcEl.parentNode.getAttribute('id') == "Program")
-  {
-    this.classList.remove('selected');
-  }
+function programDragLeave(e) {
+  this.classList.remove('selected');
   return false;
 }
 
+function programDragStart(e) {
+	dragSrcEl = this;
+	e.dataTransfer.effectAllowed = 'move';
+	e.dataTransfer.setData('text/html', this.innerHTML)
+	return false;
+}
+
+function toolboxDragStart(e) {
+	dragSrcEl = this;
+	e.dataTransfer.effectAllowed = 'move';
+}
+
 function trashDrop(e) {
+  if(dragSrcEl.parentNode.getAttribute('id') == "workbench")
+  {
+	$(this).removeClass('selected');
+    dragSrcEl.remove();
+  }
   if (e.stopPropagation) {
     e.stopPropagation(); // Stops some browsers from redirecting.
-  }
-  if(dragSrcEl.parentNode.getAttribute('id') == "Program")
-  {
-    dragSrcEl.remove();
   }
   return false;
 }
 
 function trashDragOver(e) {
-  if (e.preventDefault) {
-    e.preventDefault(); // Necessary. Allows us to drop.
-  }
-  e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object. 
-  return false;
+	$(this).addClass('selected');
+	if (e.preventDefault) {
+	e.preventDefault(); // Necessary. Allows us to drop.
+	}
+	e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object. 
+	return false;
+}
+
+function trashDragLeave(e){
+	$(this).removeClass('selected');
+	return false;
 }
 
 function addDrop(e) {
-  this.classList.remove('selected');
-  if (e.stopPropagation) {
-    e.stopPropagation(); // Stops some browsers from redirecting.
-  }
-  
-  var node = dragSrcEl.cloneNode(true);
-  $(".panel-right")[0].appendChild(node);
+	this.classList.remove('selected');
+	if (e.stopPropagation) {
+		e.stopPropagation(); // Stops some browsers from redirecting.
+	}
 
-  node.on('dragstart', handleDragStart);
-  node.on('dragover', handleDragOver);
-  node.on('dragleave', handleDragLeave);
-  node.on('drop', handleDrop);
-  
-  return false;
+	if(dragSrcEl.parentNode.getAttribute('id') == "toolbox")
+	{
+		var node = $(dragSrcEl).clone().appendTo("#workbench");
+		node.on('dragstart', programDragStart);
+		node.on('dragover', programDragOver);
+		node.on('dragleave', programDragLeave);
+		node.on('drop', programDrop);
+	}
+
+	return false;
 }
 
 function addDragOver(e) {
-  if (e.preventDefault) {
-    e.preventDefault(); // Necessary. Allows us to drop.
-  }
-  e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object. 
-  $(this).addClass("selected");
-  
-  return false;
+	if(dragSrcEl.parentNode.getAttribute('id') == "toolbox")
+	{
+		$(this).addClass('selected');
+	}
+
+	if (e.preventDefault) {
+	e.preventDefault(); // Necessary. Allows us to drop.
+	}
+	e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object. 
+	return false;
 }
 
 function addDragLeave(e) {
@@ -234,20 +267,18 @@ function addDragLeave(e) {
 }
 
 var trashElement = $("#trash");
-var add = $(".panel-right");
+var add = $("#workbench");
 
-trashElement.bind('dragover', trashDragOver);
-trashElement.bind('drop', trashDrop);
+trashElement.on('dragover', trashDragOver);
+trashElement.on('drop', trashDrop);
+trashElement.on('dragleave', trashDragLeave);
 
-add.bind('dragover', addDragOver);
-add.bind('drop', addDrop);
-add.bind('dragleave', addDragLeave);
+add.on('dragover', addDragOver);
+add.on('drop', addDrop);
+add.on('dragleave', addDragLeave);
 
-var commandblocks = $('.command');
-for(var i=0;i<commandblocks.length;i++) {
-  $(commandblocks[i]).on('dragstart', handleDragStart);
-  $(commandblocks[i]).on('dragover', handleDragOver);
-  $(commandblocks[i]).on('dragleave', handleDragLeave);
-  $(commandblocks[i]).on('dragend', handleDrop);
-};
+ var commandblocks = $('.command');
+ for(var i = 0; i < commandblocks.length; i++) {
+   $(commandblocks[i]).on('dragstart', toolboxDragStart);
+ };
 

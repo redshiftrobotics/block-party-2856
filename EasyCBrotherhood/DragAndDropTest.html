@@ -12,38 +12,84 @@
 		</div>
 		<div class="content">
 			<div id="motor-config" class="config-bar">
-				<h2 class="title">Motor Config:</h2>
+				<h2 class="title">Motor/Servo Config:</h2>
 				<div class="command" id="motor-id-1">
 					<div class="title">ID: 1</div>
 					<div class="input-text">Port: </div>
-					<input class="motor-port" placeholder="motor power"/>
+					<input class="motor-port" placeholder="Port #"/>
 					<div class="input-text">Daisychain: </div>
-					<input class="motor-daisychain" placeholder="daisy chain number"/>
+					<input class="motor-daisychain" placeholder="Daisy Chain #"/>
 					<div class="input-text">Motor Number: </div>
 					<input class="motor-number" placeholder="motor number"/>
 				</div>
 				<div class="command" id="motor-id-2">
 					<div class="title">ID: 2</div>
 					<div class="input-text">Port: </div>
-					<input class="motor-port" placeholder="motor power"/>
+					<input class="motor-port" placeholder="Port #"/>
 					<div class="input-text">Daisychain: </div>
-					<input class="motor-daisychain" placeholder="daisy chain number"/>
+					<input class="motor-daisychain" placeholder="Daisy Chain #"/>
 					<div class="input-text">Motor Number: </div>
-					<input class="motor-number"  placeholder="motor number"/>
+					<input class="motor-number"  placeholder="Motor #"/>
 				</div>
 				<div class="command" id="motor-id-3">
 					<div class="title">ID: 3</div>
 					<div class="input-text">Port: </div>
-					<input class="motor-port" placeholder="motor power"/>
+					<input class="motor-port" placeholder="Port #"/>
 					<div class="input-text">Daisychain: </div>
-					<input class="motor-daisychain" placeholder="daisy chain number"/>
+					<input class="motor-daisychain" placeholder="Daisy Chain #"/>
 					<div class="input-text">Motor Number: </div>
-					<input class="motor-number" placeholder="motor number"/>
+					<input class="motor-number" placeholder="Motor #"/>
+				</div>
+				<div class="command" id="motor-id-4">
+					<div class="title">ID: 4</div>
+					<div class="input-text">Port: </div>
+					<input class="motor-port" placeholder="Port #"/>
+					<div class="input-text">Daisychain: </div>
+					<input class="motor-daisychain" placeholder="Daisy Chain #"/>
+					<div class="input-text">Motor Number: </div>
+					<input class="motor-number" placeholder="Motor #"/>
+				</div>
+				<div class="command" id="motor-id-5">
+					<div class="title">ID: 5</div>
+					<div class="input-text">Port: </div>
+					<input class="motor-port" placeholder="Port #"/>
+					<div class="input-text">Daisychain: </div>
+					<input class="motor-daisychain" placeholder="Daisy Chain #"/>
+					<div class="input-text">Motor Number: </div>
+					<input class="motor-number"  placeholder="Motor #"/>
+				</div>
+				<div class="command" id="motor-id-6">
+					<div class="title">ID: 6</div>
+					<div class="input-text">Port: </div>
+					<input class="motor-port" placeholder="Port #"/>
+					<div class="input-text">Daisychain: </div>
+					<input class="motor-daisychain" placeholder="Daisy Chain #"/>
+					<div class="input-text">Motor Number: </div>
+					<input class="motor-number" placeholder="Motor #"/>
+				</div>
+				<div class="command" id="motor-id-7">
+					<div class="title">ID: 7</div>
+					<div class="input-text">Port: </div>
+					<input class="motor-port" placeholder="Port #"/>
+					<div class="input-text">Daisychain: </div>
+					<input class="motor-daisychain" placeholder="Daisy Chain #"/>
+					<div class="input-text">Motor Number: </div>
+					<input class="motor-number"  placeholder="Motor #"/>
+				</div>
+				<div class="command" id="motor-id-8">
+					<div class="title">ID: 8</div>
+					<div class="input-text">Port: </div>
+					<input class="motor-port" placeholder="Port #"/>
+					<div class="input-text">Daisychain: </div>
+					<input class="motor-daisychain" placeholder="Daisy Chain #"/>
+					<div class="input-text">Motor Number: </div>
+					<input class="motor-number" placeholder="Motor #"/>
 				</div>
 			</div>
 			<div class="panel-left">
 				<div id="toolbox" class="toolbox">
-					<div class="command" draggable="true" command-type="sleep">
+					<h2>Tools: (Drag from Here)</h2>
+					<div class="command draggable" draggable="true" command-type="sleep">
 						<div class="title">Sleep</div>
 						<div class="input-text">Time: </div>
 						<input class="sleep-value" placeholder="(seconds)"/>
@@ -51,35 +97,38 @@
 					<div class="command draggable" draggable="true" command-type="motor-speed">
 						<div class="title">Motor Speed</div>
 						<div class="input-text">MotorID: </div>
-						<input class="motor-id" placeholder="motor#"/>
+						<input class="motor-id" placeholder="Motor ID"/>
 						<div class="input-text">Speed: </div>
-						<input class="speed-value" placeholder="(%)"/>
+						<input class="speed-value" placeholder="(0-100)"/>
 					</div>
 					<div class="command draggable" draggable="true" command-type="motor-rotation">
 						<div class="title">Motor Rotations</div>
 						<div class="input-text">MotorID: </div>
-						<input class="motor-id" placeholder="motor#"/>
+						<input class="motor-id" placeholder="Motor ID"/>
 						<div class="input-text">Rotations: </div>
 						<input class="rotation-value" placeholder="# of rotations"/>
 						<div class="input-text">Speed: </div>
-						<input class="speed-value" placeholder="# of rotations"/>
+						<input class="speed-value" placeholder="(0-100)"/>
 					</div>
 					<div class="command draggable" draggable="true" command-type="move-servo">
 						<div class="title">Move Servo</div>
 						<div class="input-text">MotorID: </div>
-						<input class="motor-id" placeholder="motor#"/>
+						<input class="motor-id" placeholder="Motor ID"/>
 						<div class="input-text">Value: </div>
 						<input class="position-value" placeholder="(0-256)"/>
 					</div>
 					<div id="trash"></div>
 				</div>
 				<div class="program-window">
-					<h2>Program:</h2>
+					<h2>Program: (Copy below)</h2>
 					<div id="program">
 					</div>
 				</div>
 			</div>
-			<div class="panel-right droppable" id = "Program">
+			<div class="panel-right droppable">
+				<h2 id="workbench-title" >Workbench: (Drop Here)</h2>
+				<div id="workbench">
+				</div>
 			</div>
 		</div>
 		<p hidden="true" id="program-header-text">

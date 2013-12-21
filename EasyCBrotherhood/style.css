@@ -60,8 +60,8 @@
 }
 
 .selected {
-  background-color: white;
   border-style: dashed;
+  border-width:5px;
 }
 
 .global-header {
@@ -137,7 +137,13 @@
   width: 65%;
   border: solid 2px;
   border-radius: 6px;
+}
+
+#workbench {
+  float: left;
   min-height: 400px;
+  width: 100%;
+  background: #DFDFDF;
 }
 
 .trash-bar {
