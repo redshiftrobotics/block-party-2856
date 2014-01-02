@@ -4,6 +4,8 @@ _console_log = console.log;
 console.log = function(){void()};
 */
 
+var programheader;
+
 function getMotorConfig()
 {
 	motors = [];
@@ -27,7 +29,7 @@ function getMotorConfig()
 $("#compile").click(function() {
   getMotorConfig();
   parseProgram();
-})
+});
 
 function getMotorValues(id) {
   for (var i=0; i<motors.length;i++) {
@@ -94,15 +96,14 @@ function validateValues(element, values) {
   }
   if (values.position) {
     if (isNaN(values.position) || values.position < 0 || values.position > 256) {
-      alert("Command: "+element+" has an invalid position number (0-256 integers allowed)")
+      alert("Command: "+element+" has an invalid position number (0-256 integers allowed)");
     }
   }
   return true;
 }
 
 function parseProgram() {
-  programString = $("#program-header-text").text();
-
+  programString = programheader;
   programString += "task main(){";
   
   var elementList = $("#workbench").children();
@@ -151,7 +152,7 @@ function parseProgram() {
         var values = {
           motorId: motorId,
           position: position
-        }
+        };
         if (validateValues(command, values)) {
           addMoveServo(motorId, position);
         }
@@ -169,7 +170,6 @@ function parseProgram() {
 }
 
 var dragSrcEl = null;
-
 
 function toolboxDragStart(e) {
 	console.log("toolbox drag start event fired");
@@ -282,17 +282,29 @@ function addDragLeave(e) {
 
 var trashElement = $("#trash");
 var add = $("#workbench");
-
-trashElement.on('dragover', trashDragOver);
-trashElement.on('drop', trashDrop);
-trashElement.on('dragleave', trashDragLeave);
-
-add.on('dragover', addDragOver);
-add.on('drop', addDrop);
-add.on('dragleave', addDragLeave);
-
 var commandblocks = $('.command');
 
-for(var i = 0; i < commandblocks.length; i++) {
-  $(commandblocks[i]).on('dragstart', toolboxDragStart);
-};
+$("document").ready(function() {
+	console.log("app init");
+
+	// download the libraries
+	requestLibrary("drivers/common");
+	requestLibrary("I2C");
+	requestLibrary("Servos");
+	requestLibrary("Motors");
+	console.log("all requests sent");
+	
+	trashElement.on('dragover', trashDragOver);
+	trashElement.on('drop', trashDrop);
+	trashElement.on('dragleave', trashDragLeave);
+	
+	add.on('dragover', addDragOver);
+	add.on('drop', addDrop);
+	add.on('dragleave', addDragLeave);
+	
+	for(var i = 0; i < commandblocks.length; i++) {
+		$(commandblocks[i]).on('dragstart', toolboxDragStart);
+	}
+	
+	console.log("everything initialized");
+});
