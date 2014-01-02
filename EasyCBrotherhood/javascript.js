@@ -18,8 +18,6 @@ function getMotorConfig()
 	}
 }
 
-var dragSrcEl = null;
-
 $("#compile").click(function() {
   getMotorConfig();
   parseProgram();
@@ -98,6 +96,8 @@ function validateValues(element, values) {
 
 function parseProgram() {
   programString = $("#program-header-text").text();
+
+  programString += "task main(){";
   
   var elementList = $("#workbench").children();
   elementList.each(function() {
@@ -155,49 +155,14 @@ function parseProgram() {
       break;
     }
   });
+  
+  programString += "}";
   console.log(programString);
   $("#program").text(programString);
   $("body, html").animate({scrollTop: $(".program-window").offset().top-45});
 }
 
-function programDrop(e) {
-  // this/e.target is current target element.
-
-  if (e.stopPropagation) {
-    e.stopPropagation(); // Stops some browsers from redirecting.
-  }
-
-  // Don't do anything if dropping the same column we're dragging.
-  if (dragSrcEl != this) {
-    // Set the source column's HTML to the HTML of the column we dropped on.
-    dragSrcEl.innerHTML = this.innerHTML;
-    this.innerHTML = e.dataTransfer.getData('text/html');
-  }
-
-  return false;
-}
-
-function programDragOver(e) {
-  this.classList.add('selected');
-  
-  if (e.preventDefault) {
-    e.preventDefault(); // Necessary. Allows us to drop.
-  }
-  e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object. 
-  return false;
-}
-  
-function programDragLeave(e) {
-  this.classList.remove('selected');
-  return false;
-}
-
-function programDragStart(e) {
-	dragSrcEl = this;
-	e.dataTransfer.effectAllowed = 'move';
-	e.dataTransfer.setData('text/html', this.innerHTML)
-	return false;
-}
+var dragSrcEl = null;
 
 function toolboxDragStart(e) {
 	dragSrcEl = this;
@@ -221,6 +186,7 @@ function trashDragOver(e) {
 	if (e.preventDefault) {
 	e.preventDefault(); // Necessary. Allows us to drop.
 	}
+
 	e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object. 
 	return false;
 }
@@ -240,12 +206,46 @@ function addDrop(e) {
 	{
 		var node = $(dragSrcEl).clone().appendTo("#workbench");
 		node.on('dragstart', programDragStart);
-		node.on('dragover', programDragOver);
-		node.on('dragleave', programDragLeave);
-		node.on('drop', programDrop);
+    node.on('drop', programDrop);
+    node.on('dragover', programDragOver);
 	}
 
 	return false;
+}
+
+function programDragStart(e) {
+  dragSrcEl = this;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/html', this.innerHTML)
+  return false;
+}
+
+function programDrop(e)
+{
+  //alert("drop");
+
+  if (e.stopPropagation) 
+  {
+    e.stopPropagation(); // Stops some browsers from redirecting.
+  }
+  
+    // Set the source column's HTML to the HTML of the column we dropped on.
+  dragSrcEl.innerHTML = this.innerHTML;
+  this.innerHTML = e.dataTransfer.getData('text/html');
+}
+
+function programDragOver(e) 
+{
+
+  if (e.preventDefault) 
+  {
+    e.preventDefault(); // Necessary. Allows us to drop.
+  }
+
+  e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+  alert("dragover");
+
+  return false;
 }
 
 function addDragOver(e) {
@@ -254,7 +254,8 @@ function addDragOver(e) {
 		$(this).addClass('selected');
 	}
 
-	if (e.preventDefault) {
+	if (e.preventDefault) 
+  {
 	e.preventDefault(); // Necessary. Allows us to drop.
 	}
 	e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object. 
@@ -277,8 +278,8 @@ add.on('dragover', addDragOver);
 add.on('drop', addDrop);
 add.on('dragleave', addDragLeave);
 
- var commandblocks = $('.command');
- for(var i = 0; i < commandblocks.length; i++) {
-   $(commandblocks[i]).on('dragstart', toolboxDragStart);
- };
+var commandblocks = $('.command');
 
+for(var i = 0; i < commandblocks.length; i++) {
+  $(commandblocks[i]).on('dragstart', toolboxDragStart);
+};
