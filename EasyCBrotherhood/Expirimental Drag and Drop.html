@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <div id = "one"class = "command" draggable="true">
+      <p>Drag One</p>
+    </div>
+    <div id = "two" class="command" draggable="true">
+      <p>Drag Two</p>
+    </div>
+  </body>
+  <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+  <script>
+    function programDragStart(e) {
+      dragSrcEl = this;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', this.innerHTML)
+      return false;
+    }
+
+    function programDrop(e)
+    {
+
+      if (e.stopPropagation) 
+      {
+        e.stopPropagation(); // Stops some browsers from redirecting.
+      }
+      
+        // Set the source column's HTML to the HTML of the column we dropped on.
+      dragSrcEl.innerHTML = this.innerHTML;
+      this.innerHTML = e.dataTransfer.getData('text/html');
+    }
+
+    function programDragOver(e) 
+    {
+
+      if (e.preventDefault) 
+      {
+        e.preventDefault(); // Necessary. Allows us to drop.
+      }
+
+      e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+
+      return false;
+    }
+
+
+    $("document").ready(function() {
+      var commandblocks = $('.command');
+      for(var i = 0; i < commandblocks.length; i++) {
+        $(commandblocks[i]).bind("dragstart", programDragStart);
+        $(commandblocks[i]).bind("drop", programDrop);
+        $(commandblocks[i]).bind("dragover", programDragOver);
+      };
+    });
+
+  </script>
+</html>

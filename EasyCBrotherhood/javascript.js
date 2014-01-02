@@ -6,22 +6,22 @@ console.log = function(){void()};
 
 function getMotorConfig()
 {
-	motors = [];
+  motors = [];
   var motorConfigs = $("#motor-config").children(".command");
-	for(i = 0; i < motorConfigs.length; i++)
-	{
+  for(i = 0; i < motorConfigs.length; i++)
+  {
     var current = $(motorConfigs[i]);
     var motorId = i+1;
-		var motorPort = parseInt(current.children(".motor-port")[0].value);
-		var motorDaisychain = parseInt(current.children(".motor-daisychain")[0].value);
-		var motorNumber = parseInt(current.children(".motor-number")[0].value);
-		motors.push({
+    var motorPort = parseInt(current.children(".motor-port")[0].value);
+    var motorDaisychain = parseInt(current.children(".motor-daisychain")[0].value);
+    var motorNumber = parseInt(current.children(".motor-number")[0].value);
+    motors.push({
       motorId: motorId,
       port: motorPort,
       daisy: motorDaisychain,
       number: motorNumber
     });
-	}
+  }
 }
 
 $("#compile").click(function() {
@@ -172,16 +172,16 @@ var dragSrcEl = null;
 
 
 function toolboxDragStart(e) {
-	console.log("toolbox drag start event fired");
-	dragSrcEl = this;
-	e.dataTransfer.effectAllowed = 'move';
+  console.log("toolbox drag start event fired");
+  dragSrcEl = this;
+  e.dataTransfer.effectAllowed = 'move';
 }
 
 function trashDrop(e) {
     console.log("trash drop event fired");
   if(dragSrcEl.parentNode.getAttribute('id') == "workbench")
   {
-	$(this).removeClass('selected');
+  $(this).removeClass('selected');
     dragSrcEl.remove();
   }
   if (e.stopPropagation) {
@@ -191,41 +191,44 @@ function trashDrop(e) {
 }
 
 function trashDragOver(e) {
-	console.log("trash drag over event fired");
-	$(this).addClass('selected');
-	if (e.preventDefault) {
-	e.preventDefault(); // Necessary. Allows us to drop.
-	}
+  console.log("trash drag over event fired");
+  $(this).addClass('selected');
+  if (e.preventDefault) {
+  e.preventDefault(); // Necessary. Allows us to drop.
+  }
 
-	e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object. 
-	return false;
+  e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object. 
+  return false;
 }
 
 function trashDragLeave(e){
-	console.log("trash drag leave event fired");
-	$(this).removeClass('selected');
-	return false;
+  console.log("trash drag leave event fired");
+  $(this).removeClass('selected');
+  return false;
 }
 
 function addDrop(e) {
-	console.log("add drop event fired");
-	this.classList.remove('selected');
-	if (e.stopPropagation) {
-		e.stopPropagation(); // Stops some browsers from redirecting.
-	}
+  console.log("add drop event fired");
+  this.classList.remove('selected');
+  if (e.stopPropagation) {
+    e.stopPropagation();
+  }
 
-	if(dragSrcEl.parentNode.getAttribute('id') == "toolbox")
-	{
-		var node = $(dragSrcEl).clone().appendTo("#workbench");
-		node.on('dragstart', programDragStart);
-    node.on('drop', programDrop);
-    node.on('dragover', programDragOver);
-	}
+  if(dragSrcEl.parentNode.getAttribute('id') == "toolbox")
+  {
+    var NewNode = dragSrcEl.cloneNode(true);
+    document.getElementById("workbench").appendChild(NewNode);
 
-	return false;
+    NewNode.addEventListener('dragstart', programDragStart, false);
+    NewNode.addEventListener('dragover', programDragOver, false);
+    NewNode.addEventListener('drop', programDrop, false);
+  }
+
+  return false;
 }
 
-function programDragStart(e) {
+function programDragStart(e) 
+{
   dragSrcEl = this;
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/html', this.innerHTML)
@@ -255,24 +258,23 @@ function programDragOver(e)
   }
 
   e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
-  alert("dragover");
 
   return false;
 }
 
 function addDragOver(e) {
-	console.log("add drag over event fired");
-	if(dragSrcEl.parentNode.getAttribute('id') == "toolbox")
-	{
-		$(this).addClass('selected');
-	}
-
-	if (e.preventDefault) 
+  console.log("add drag over event fired");
+  if(dragSrcEl.parentNode.getAttribute('id') == "toolbox")
   {
-	e.preventDefault(); // Necessary. Allows us to drop.
-	}
-	e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object. 
-	return false;
+    $(this).addClass('selected');
+  }
+
+  if (e.preventDefault) 
+  {
+  e.preventDefault(); // Necessary. Allows us to drop.
+  }
+  e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object. 
+  return false;
 }
 
 function addDragLeave(e) {
