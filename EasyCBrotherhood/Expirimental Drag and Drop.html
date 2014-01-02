@@ -47,12 +47,20 @@
 
 
     $("document").ready(function() {
-      var commandblocks = $('.command');
-      for(var i = 0; i < commandblocks.length; i++) {
-        $(commandblocks[i]).bind("dragstart", programDragStart);
-        $(commandblocks[i]).bind("drop", programDrop);
-        $(commandblocks[i]).bind("dragover", programDragOver);
-      };
+      var cols = document.querySelectorAll('.command');
+      [].forEach.call(cols, function(col) {
+        col.addEventListener('dragstart', programDragStart, false);
+        col.addEventListener('dragover', programDragOver, false);
+        col.addEventListener('drop', programDrop, false);
+      });
+
+
+     // var commandblocks = $('.command');
+     // for(var i = 0; i < commandblocks.length; i++) {
+     //   $(commandblocks[i]).on('dragstart', programDragStart);
+     //   $(commandblocks[i]).on('drop', programDrop);
+     //   $(commandblocks[i]).on('dragover', programDragOver);
+     // };
     });
 
   </script>

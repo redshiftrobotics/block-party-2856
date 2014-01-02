@@ -60,41 +60,46 @@ function addMoveServo(motorId, position) {
   programString += "Servos_SetPosition(S"+motor.port+", "+motor.daisy+", "+motor.number+", "+position+");";
 }
 
-function validateValues(element, values) {
-  if (values.sleep) {
-    if (isNaN(values.sleep) || values.sleep < 0) {
-      console.log(element[0]);
-      alert("Command: "+element+" has an invalid sleep time (positive floats allowed)");
+function validateValues(blockname, values) 
+{
+  if (blockname=="sleep") 
+  {
+    if (isNaN(values.sleep) || values.sleep < 0) 
+    {
+      alert("Command: "+blockname+" has an invalid sleep time (positive floats allowed)");
       return false;
     }
   }
-  if (values.motorId) {
-    var motorValid = false;
-    for (var i=0; i<window.motors.length;i++) {
-      if (window.motors[i].motorId === values.motorId) {
-        motorValid = true;
-      }
-    }
-    if (!motorValid) {
-      alert("Command: "+element+" has an invalid motorId");
+  if (blockname=="motor-speed" || blockname=="motor-rotations" || blockname=="move-servo") 
+  {
+    if (isNaN(values.motorId) || values.motorId >= window.motors.length) 
+    {
+      alert("Command: "+blockname+" has an invalid motorId");
       return false;
     }
   }
-  if (values.speed) {
-    if (isNaN(values.speed) || values.speed < -100 || values.speed > 100) {
-      alert("Command: "+element+" has an invalid speed value (-100 through 100 integer allowed)");
+
+  if (blockname=="motor-speed" || blockname=="motor-rotations" || blockname=="move-servo") 
+  {
+    if (isNaN(values.speed) || values.speed < -100 || values.speed > 100) 
+    {
+      alert("Command: "+blockname+" has an invalid speed value (-100 through 100 integer allowed)");
       return false;
     }
   }
-  if (values.rotations) {
-    if (isNaN(values.rotations)) {
-      alert("Command: "+element+" has an invalid rotation number (positive or negative floats allowed)");
+  if (blockname=="motor-rotations") 
+  {
+    if (isNaN(values.rotations)) 
+    {
+      alert("Command: "+blockname+" has an invalid rotation number (positive or negative floats allowed)");
       return false;
     }
   }
-  if (values.position) {
-    if (isNaN(values.position) || values.position < 0 || values.position > 256) {
-      alert("Command: "+element+" has an invalid position number (0-256 integers allowed)");
+  if (blockname=="motor-servo") {
+    if (isNaN(values.position) || values.position < 0 || values.position > 256) 
+    {
+      alert("Command: "+blockname+" has an invalid position number (0-256 integers allowed)");
+      return false;
     }
   }
   return true;
@@ -104,6 +109,8 @@ function parseProgram() {
   programString = programheader;
   programString += "task main(){";
   
+  var BuildSuccess = true;
+
   var elementList = $("#workbench").children();
   elementList.each(function() {
     var command = $(this);
@@ -113,8 +120,12 @@ function parseProgram() {
         var values = {
           sleep: sleepTime
         };
-        if (validateValues(command,values)) {
+        if (validateValues("sleep",values)) {
           addSleep(sleepTime);
+        }
+        else
+        {
+          BuildSuccess = false;
         }
       break;
 
@@ -125,12 +136,16 @@ function parseProgram() {
           motorId: motorId,
           speed: speed
         };
-        if (validateValues(command,values)) {
+        if (validateValues("motor-speed",values)) {
           addMotorSpeed(motorId, speed);
+        }
+        else
+        {
+          BuildSuccess = false;
         }
       break;
 
-      case "motor-rotation":
+      case "motor-rotations":
         var motorId = parseInt(command.children(".motor-id")[0].value);
         var speed = parseInt(command.children(".speed-value")[0].value);
         var rotations = parseFloat(command.children(".rotation-value")[0].value);
@@ -139,8 +154,12 @@ function parseProgram() {
           speed: speed,
           rotations: rotations
         };
-        if (validateValues(command, values)) {
+        if (validateValues("motor-rotations", values)) {
           addMotorRotation(motorId, rotations, speed);
+        }
+        else
+        {
+          BuildSuccess = false;
         }
       break;
 
@@ -151,8 +170,12 @@ function parseProgram() {
           motorId: motorId,
           position: position
         };
-        if (validateValues(command, values)) {
+        if (validateValues("move-servo", values)) {
           addMoveServo(motorId, position);
+        }
+        else
+        {
+          BuildSuccess = false;
         }
       break;
 
@@ -162,9 +185,13 @@ function parseProgram() {
   });
   
   programString += "}";
-  console.log(programString);
-  $("#program").text(programString);
-  $("body, html").animate({scrollTop: $(".program-window").offset().top-45});
+
+  //if there have been no build failures, draw the code to the screen
+  if(BuildSuccess)
+  {
+    $("#program").text(programString);
+    $("body, html").animate({scrollTop: $(".program-window").offset().top-45});
+  }
 }
 
 var dragSrcEl = null;
@@ -215,6 +242,13 @@ function addDrop(e) {
   if(dragSrcEl.parentNode.getAttribute('id') == "toolbox")
   {
     var NewNode = dragSrcEl.cloneNode(true);
+
+    // var Inputs = dragSrcEl.querySelectorAll("input");
+
+    // [].forEach.call(Inputs, function(Input) {
+    //   alert("input");
+    // });
+
     document.getElementById("workbench").appendChild(NewNode);
 
     NewNode.addEventListener('dragstart', programDragStart, false);
@@ -228,15 +262,13 @@ function addDrop(e) {
 function programDragStart(e) 
 {
   dragSrcEl = this;
-  e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/html', this.innerHTML)
+  e.dataTransfer.effectAllowed = "move";
+  e.dataTransfer.setData('text/html', this)
   return false;
 }
 
 function programDrop(e)
 {
-  //alert("drop");
-
   if (e.stopPropagation) 
   {
     e.stopPropagation(); // Stops some browsers from redirecting.
@@ -255,7 +287,7 @@ function programDragOver(e)
     e.preventDefault(); // Necessary. Allows us to drop.
   }
 
-  e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+  e.dataTransfer.dropEffect = "move";  // See the section on the DataTransfer object.
 
   return false;
 }
@@ -271,7 +303,7 @@ function addDragOver(e) {
   {
   e.preventDefault(); // Necessary. Allows us to drop.
   }
-  e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object. 
+  //e.dataTransfer.dropEffect = 'move'; // See the section on the DataTransfer object. 
   return false;
 }
 
