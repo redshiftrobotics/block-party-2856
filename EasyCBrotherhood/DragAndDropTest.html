@@ -3,15 +3,17 @@
 	<head>
 		<title>EasyC | SAAS - Robotics </title>
 		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="stylesheet" type="text/css" href="css/introjs.min.css">
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="js/intro.min.js"></script>
 	</head>
 	<body>
 		<div class="global-header">
 			<div class="title">Welcome to EasyC!</div>
-			<div id="compile">Compile</div>
+			<div data-step="4" data-intro="When you're ready to use your program press this button to generate its text." id="compile">Compile</div>
 		</div>
 		<div class="content">
-			<div id="motor-config" class="config-bar">
+			<div data-step="1" data-intro="Welcome to EasyC! You can use EasyC to create an autonomous program for your robot, even if you don't know how to use RobotC.<br /><br />Your first step is to input information about the motors and servos on your robot. For example, if you have a motor controller directly attached to port 1 on the NXT, and a motor wired to motor 2, you would put 1 in the port field, 1 in the daisychain field, and 2 in the motor field." id="motor-config" class="config-bar">
 				<h2 class="title">Motor/Servo Config:</h2>
 				<div class="command" id="motor-id-1">
 					<div class="title">ID: 1</div>
@@ -87,7 +89,7 @@
 				</div>
 			</div>
 			<div class="panel-left">
-				<div id="toolbox" class="toolbox">
+				<div data-step="3" data-intro="The toolbox holds command blocks. Drag blocks out of the toolbox to make a copy to put in your workbench. You can also drag a block to the recycle bin to remove it." id="toolbox" class="toolbox">
 					<h2>Tools: (Drag from Here)</h2>
 					<div class="command draggable" draggable="true" command-type="sleep">
 						<div class="title">Sleep</div>
@@ -119,13 +121,13 @@
 					</div>
 					<div id="trash"></div>
 				</div>
-				<div class="program-window">
+				<div data-step="5" data-intro="This is where your program will appear when you hit the compile button. All you need to do is copy this text, paste it into RobotC, and download the program to the robot." class="program-window">
 					<h2>Program: (Copy below)</h2>
 					<pre id="program">
 					</pre>
 				</div>
 			</div>
-			<div class="panel-right droppable">
+			<div data-step="2" data-intro="This is the workbench. Drag blocks from the toolbox into this space to create your program. You can input command values in either the toolbox or the workbench." class="panel-right droppable">
 				<h2 id="workbench-title" >Workbench: (Drop Here)</h2>
 				<div id="workbench">
 				</div>

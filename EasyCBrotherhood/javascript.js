@@ -338,5 +338,7 @@ $("document").ready(function() {
 		$(commandblocks[i]).on('dragstart', toolboxDragStart);
 	}
 	
-	console.log("everything initialized");
+	console.log("everything initialized, starting the tutorial");
+	
+	introJs().start();
 });
