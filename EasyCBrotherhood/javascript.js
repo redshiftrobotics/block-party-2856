@@ -4,8 +4,6 @@ _console_log = console.log;
 console.log = function(){void()};
 */
 
-var programheader;
-
 function getMotorConfig()
 {
 	motors = [];

@@ -1,8 +1,7 @@
-var CodeAddition;
-
 var libraryRequests = ["drivers/common", "I2C", "Motors", "Servos"];
 var libraryText = ["drivers/common", "I2C", "Motors", "Servos"];
 var numberOfLoadedLibraries = 0;
+var programheader;
 
 // TODO: don't use rawgithub.com
 // we have to use rawgithub.com instead of raw.github.com because GitHub sends a MIME of text/plain and XMLHttpRequest only accepts text/html, text/xml, etc.
@@ -37,21 +36,10 @@ function recieveLibrary(name)
 		console.log("loaded all libraries");
 		
 		// instantiate the data into JavaScript
-		CodeAddition = pragmaConfig + libraryText["drivers/common"] + libraryText["I2C"] + libraryText["Motors"] + libraryText["Servos"];
+		programheader = pragmaConfig + libraryText["drivers/common"] + libraryText["I2C"] + libraryText["Motors"] + libraryText["Servos"];
 		
 		// get rid of the infobar and enable the app
 		$("#loadingAlert").remove();
 		$("#addButton").removeAttr("disabled");
 	}
 }
-
-window.onready = function()
-{
-	console.log("app init");
-	// download the libraries
-	requestLibrary("drivers/common");
-	requestLibrary("I2C");
-	requestLibrary("Servos");
-	requestLibrary("Motors");
-	console.log("all requests sent");
-};
