@@ -1,3 +1,9 @@
+// uncomment to disable console debugging messages
+/*
+_console_log = console.log;
+console.log = function(){void()};
+*/
+
 function getMotorConfig()
 {
 	motors = [];
@@ -164,12 +170,15 @@ function parseProgram() {
 
 var dragSrcEl = null;
 
+
 function toolboxDragStart(e) {
+	console.log("toolbox drag start event fired");
 	dragSrcEl = this;
 	e.dataTransfer.effectAllowed = 'move';
 }
 
 function trashDrop(e) {
+    console.log("trash drop event fired");
   if(dragSrcEl.parentNode.getAttribute('id') == "workbench")
   {
 	$(this).removeClass('selected');
@@ -182,6 +191,7 @@ function trashDrop(e) {
 }
 
 function trashDragOver(e) {
+	console.log("trash drag over event fired");
 	$(this).addClass('selected');
 	if (e.preventDefault) {
 	e.preventDefault(); // Necessary. Allows us to drop.
@@ -192,11 +202,13 @@ function trashDragOver(e) {
 }
 
 function trashDragLeave(e){
+	console.log("trash drag leave event fired");
 	$(this).removeClass('selected');
 	return false;
 }
 
 function addDrop(e) {
+	console.log("add drop event fired");
 	this.classList.remove('selected');
 	if (e.stopPropagation) {
 		e.stopPropagation(); // Stops some browsers from redirecting.
@@ -249,6 +261,7 @@ function programDragOver(e)
 }
 
 function addDragOver(e) {
+	console.log("add drag over event fired");
 	if(dragSrcEl.parentNode.getAttribute('id') == "toolbox")
 	{
 		$(this).addClass('selected');
