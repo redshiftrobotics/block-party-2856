@@ -275,8 +275,11 @@ function programDrop(e)
   }
   
     // Set the source column's HTML to the HTML of the column we dropped on.
+  if(dragSrcEl != this)
+  {
   dragSrcEl.innerHTML = this.innerHTML;
   this.innerHTML = e.dataTransfer.getData('text/html');
+}
 }
 
 function programDragOver(e) 
