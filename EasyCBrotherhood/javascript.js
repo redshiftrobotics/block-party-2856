@@ -41,21 +41,25 @@ function getMotorValues(id) {
   }
 }
 
-function addSleep(time) {
+function addSleep(time) 
+{
   programString += "Sleep("+time*1000+");";
 }
 
-function addMotorSpeed(motorId, speed) {
+function addMotorSpeed(motorId, speed) 
+{
   var motor = getMotorValues(motorId);
-  programString += "Motors_MoveSpeed(S"+motor.port+", "+motor.daisy+", "+motor.number+", "+speed+");";
+  programString += "Motors_SetSpeed(S"+motor.port+", "+motor.daisy+", "+motor.number+", "+speed+");";
 }
 
-function addMotorRotation(motorId, rotations, speed) {
+function addMotorRotation(motorId, rotations, speed) 
+{
   var motor = getMotorValues(motorId);
   programString += "Motors_MoveRotations(S"+motor.port+", "+motor.daisy+", "+motor.number+", "+rotations+", "+speed+");";
 }
 
-function addMoveServo(motorId, position) {
+function addMoveServo(motorId, position) 
+{
   var motor = getMotorValues(motorId);
   programString += "Servos_SetPosition(S"+motor.port+", "+motor.daisy+", "+motor.number+", "+position+");";
 }
@@ -79,7 +83,7 @@ function validateValues(blockname, values)
     }
   }
 
-  if (blockname=="motor-speed" || blockname=="motor-rotations" || blockname=="move-servo") 
+  if (blockname=="motor-speed" || blockname=="motor-rotations") 
   {
     if (isNaN(values.speed) || values.speed < -100 || values.speed > 100) 
     {
@@ -275,11 +279,11 @@ function programDrop(e)
   }
   
     // Set the source column's HTML to the HTML of the column we dropped on.
-  if(dragSrcEl != this)
+  if(dragSrcEl != this && dragSrcEl.parentNode.id == "workbench")
   {
-  dragSrcEl.innerHTML = this.innerHTML;
-  this.innerHTML = e.dataTransfer.getData('text/html');
-}
+    dragSrcEl.innerHTML = this.innerHTML;
+    this.innerHTML = e.dataTransfer.getData('text/html');
+  }
 }
 
 function programDragOver(e) 
