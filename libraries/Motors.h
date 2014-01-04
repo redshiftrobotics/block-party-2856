@@ -92,3 +92,17 @@ void Motors_MoveRotations(tSensors Port, int DaisyChainLevel, int MotorNumber, f
 
 	Motors_SetPosition(Port, DaisyChainLevel, MotorNumber, I2C_GetEncoderPosition(Port, DaisyChainLevel, MotorNumber) + (Rotations * 1440), Speed);
 }
+
+void Motors_StopAllMotors()
+{
+	for (int port = 1; port <= 4; port++) {
+		for (int daisychain = 1; daisychain <= 4; daisychain++) {
+			for (int motor = 1; motor <= 2; motor++) {
+				Motors_SetSpeed(S1, daisychain, motor, 0);
+				Motors_SetSpeed(S2, daisychain, motor, 0);
+				Motors_SetSpeed(S3, daisychain, motor, 0);
+				Motors_SetSpeed(S4, daisychain, motor, 0);
+			}
+		}
+	}
+}
