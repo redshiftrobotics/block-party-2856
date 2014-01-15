@@ -21,6 +21,10 @@ void MovementLibraries_MoveTurret(int Degree)
 	{
 		Servos_SetPosition(S1, 1, 3, MovementLibraries_ToServoCoordinate(Degree));
 	}
+	else
+	{
+		writeDebugStreamLine("Turret Position Out Of Range");
+	}
 }
 
 //SUMARRY: Moves the top arm joint. Goes from degrees (103, -65)
@@ -31,14 +35,49 @@ void MovementLibraries_MoveTopJoint(int Degree)
 	{
 		Servos_SetPosition(S1, 1, 1, MovementLibraries_ToServoCoordinate(Degree));
 	}
+	else
+	{
+		writeDebugStreamLine("Top Joint Position Out Of Range");
+	}
 }
 
-//SUMARRY: Moves the middle joint. Goes from degrees(54, -44)
+//SUMARRY: Moves the middle joint. Goes from degrees(76, -44)
 void MovementLibraries_MoveMiddleJoint(int Degree)
 {
 	Degree += 58;
-	if(Degree <= MovementLibraries_ToDegree(150) && Degree >= MovementLibraries_ToDegree(20))
+	if(Degree <= MovementLibraries_ToDegree(180) && Degree >= MovementLibraries_ToDegree(20))
 	{
 		Servos_SetPosition(S1, 1, 2, MovementLibraries_ToServoCoordinate(Degree));
 	}
+	else
+	{
+		writeDebugStreamLine("Middle Joint Position Out Of Range");
+	}
+}
+
+//SUMARRY: allows us to test the range that a servo may go to
+bool MovementLibraries_TestRange(string Name, int Degree)
+{
+	if(Name == "Turret")
+	{
+		if(Degree <= 93 && Degree >= -83)
+		{
+			return true;
+		}
+	}
+	else if(Name == "Middle Joint")
+	{
+		if(Degree <= 76 && Degree >= -44)
+		{
+			return true;
+		}
+	}
+	else if (Name == "Top Joint")
+	{
+		if(Degree <= 103 && Degree >= -65)
+		{
+			return true;
+		}
+	}
+	return false;
 }

@@ -1,27 +1,23 @@
 #pragma config(Sensor, S1,     ServoController,               sensorI2CCustom)
-#include "MovementLibraries.c"
 #include "InverseKinematics.c"
+#include "../libraries/Bluetooth.c"
+
 
 task main()
 {
-	//setting y
-	int y = 90;
-	//creating a variable to store a pointer
-	int *p;
-	//creating a pointer to the variable Y and setting p to its value
-	p = &y;
-
-	//writing y
-	writeDebugStream("%i", y);
-	//dereferencing p and writing it
-	writeDebugStreamLine(", %i", *p);
-
-	//AJ();
-	//MovementLibraries_MoveMiddleJoint(-43);
-	//MovementLibraries_MoveTopJoint(100);
-	//writeDebugStreamLine("%f", InverseKinematics_ToRadians(180));
+	int X = 0;
+	int Y = 0;
+	int Z = 0;
 
 	while(true)
 	{
+		if(Bluetooth_ReadMessage(&X, &Y, &Z))
+		{
+			InverseKinematics_ThreeJoint(21, 18, X, Y, Z);
+		}
+
+
+
+		sleep(50);
 	}
 }

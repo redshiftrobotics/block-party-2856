@@ -1,0 +1,213 @@
+<html>
+	<head>
+		<style>
+		/* Prevent the text contents of draggable elements from being selectable. */
+		[draggable] {
+			-moz-user-select: none;
+			-khtml-user-select: none;
+			-webkit-user-select: none;
+			user-select: none;
+			/* Required to make elements draggable in old WebKit */
+			-khtml-user-drag: element;
+			-webkit-user-drag: element;
+		}
+		.Command {
+			height: 150px;
+			width: 150px;
+			float: left;
+			border: 2px solid #666666;
+			background-color: #ccc;
+			margin-right: 5px;
+			-webkit-border-radius: 10px;
+			-ms-border-radius: 10px;
+			-moz-border-radius: 10px;
+			border-radius: 10px;
+			-webkit-box-shadow: inset 0 0 3px #000;
+			-ms-box-shadow: inset 0 0 3px #000;
+			box-shadow: inset 0 0 3px #000;
+			text-align: center;
+			cursor: move;
+		}
+		
+		#Trash {
+			height: 150px;
+			width: 150px;
+			float: left;
+			border: 2px solid #666666;
+			background-color: #ccc;
+			margin-right: 5px;
+			-webkit-border-radius: 10px;
+			-ms-border-radius: 10px;
+			-moz-border-radius: 10px;
+			border-radius: 10px;
+			-webkit-box-shadow: inset 0 0 3px #000;
+			-ms-box-shadow: inset 0 0 3px #000;
+			box-shadow: inset 0 0 3px #000;
+			text-align: center;
+			cursor: move;
+			background-color: red;
+		}
+		
+		.selected{
+			background-color: white;
+			border-style: dashed;
+		{
+		</style>
+	</head>
+	<body>
+		<div id = "Commands">
+			<div class="Command" draggable="true">A</div>
+			<div class="Command" draggable="true">B</div>
+			<div class="Command" draggable="true">C</div>
+		</div>
+		<div class = "row">
+			<div id="Trash" draggable="true">Trash</div>
+		</div>
+		<div class = "row">
+			<div id = "Add" draggable="true">Drag Here</div>
+		</div>
+		<div id = "Program">
+			<div id = "Sleep">
+				<p>1</p>
+			</div>
+		</div>
+	</body>
+	<script>
+
+		function ParseProgram()
+		{
+			
+			var ElementList = document.getElementById("Program").children; 
+			
+			for(i = 0; i < ElementList.length; i++)
+			{
+				ValueList = ElementList[i].children
+				if(ElementList[i].getAttribute('id') == "Sleep")
+				{
+					alert("Sleep");'
+				}
+			}
+		}
+		
+		var dragSrcEl = null;
+
+		function handleDragStart(e) {
+			// Target (this) element is the source node.
+			dragSrcEl = this;
+			e.dataTransfer.effectAllowed = 'move';
+			e.dataTransfer.setData('text/html', this.innerHTML);
+		}
+		
+		function handleDrop(e) {
+			this.classList.remove('selected');
+			if (e.stopPropagation) {
+				e.stopPropagation(); // Stops some browsers from redirecting.
+			}
+			
+			if(this == document.getElementById("Trash"))
+			{
+				dragSrcEl.remove();
+			}
+			else if (dragSrcEl != this && dragSrcEl.parentNode.getAttribute('id') == "Program")
+			{
+				dragSrcEl.innerHTML = this.innerHTML;
+				this.innerHTML = e.dataTransfer.getData('text/html');
+			}
+			return false;
+		}
+		
+		function handleDragOver(e) {
+			if (e.preventDefault) {
+				e.preventDefault(); // Necessary. Allows us to drop.
+			}
+			e.dataTransfer.dropEffect = 'move';	// See the section on the DataTransfer object. 
+			if(this != dragSrcEl && dragSrcEl.parentNode.getAttribute('id') == "Program")
+			{
+				this.classList.add('selected');
+			}
+			return false;
+		}
+			
+		function handleDragLeave(e) {
+			if(dragSrcEl.parentNode.getAttribute('id') == "Program")
+			{
+				this.classList.remove('selected');
+			}
+			return false;
+		}
+		
+		function trashDrop(e) {
+			if (e.stopPropagation) {
+				e.stopPropagation(); // Stops some browsers from redirecting.
+			}
+			if(dragSrcEl.parentNode.getAttribute('id') == "Program")
+			{
+				dragSrcEl.remove();
+			}
+			return false;
+		}
+		
+		function trashDragOver(e) {
+			if (e.preventDefault) {
+				e.preventDefault(); // Necessary. Allows us to drop.
+			}
+			e.dataTransfer.dropEffect = 'move';	// See the section on the DataTransfer object. 
+			return false;
+		}
+
+		
+		function addDrop(e) {
+			this.classList.remove('selected');
+			if (e.stopPropagation) {
+				e.stopPropagation(); // Stops some browsers from redirecting.
+			}
+			
+			var node = dragSrcEl.cloneNode(true);
+			document.getElementById("Program").appendChild(node);
+			
+			node.addEventListener('dragstart', handleDragStart, false);
+			node.addEventListener('dragover', handleDragOver, false);
+			node.addEventListener('dragleave', handleDragLeave, false);
+			node.addEventListener('drop', handleDrop, false);
+			
+			return false;
+		}
+		
+		function addDragOver(e) {
+			if (e.preventDefault) {
+				e.preventDefault(); // Necessary. Allows us to drop.
+			}
+			e.dataTransfer.dropEffect = 'move';	// See the section on the DataTransfer object. 
+			this.classList.add('selected');
+			
+			return false;
+		}
+		
+		function addDragLeave(e) {
+			this.classList.remove('selected');
+			return false;
+		}
+		
+		var TrashElement = document.getElementById("Trash");
+		var Add = document.getElementById("Add");
+		
+		TrashElement.addEventListener('dragover', trashDragOver, false);
+		TrashElement.addEventListener('drop', trashDrop, false);
+		
+		Add.addEventListener('dragover', addDragOver, false);
+		Add.addEventListener('drop', addDrop, false);
+		Add.addEventListener('dragleave', addDragLeave, false);
+		
+		var cols = document.querySelectorAll('.Command');
+		[].forEach.call(cols, function(col)
+		{
+			col.addEventListener('dragstart', handleDragStart, false);
+			col.addEventListener('dragover', handleDragOver, false);
+			col.addEventListener('dragleave', handleDragLeave, false);
+			col.addEventListener('drop', handleDrop, false);
+		});
+		
+		alert("started");
+		ParseProgram();
+	</script>
+</html>
