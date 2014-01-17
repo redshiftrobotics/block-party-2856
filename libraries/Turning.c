@@ -15,8 +15,19 @@ void Move(int RightPower, int LeftPower)
 	Motors_SetSpeed(S1, 2, 2, -LeftPower);
 }
 
-void Calibrate()
+void Turning_Calibrate()
 {
+	//reset all variables
+	FinalX = 5;
+	FinalY = 0;
+	Heading = 0;
+	ChangePerSecond = 0;
+	TotalDrift = 0;
+
+	//stops the task in case it was running
+	StopTask(UpdateHeading);
+
+	//starts the thread that updated the gyro in the backgorund
 	Gyro_Start();
 
 	//calibration phase
@@ -31,8 +42,8 @@ void Calibrate()
 	StartTask(UpdateHeading);
 }
 
-//biggest amount you can turn is +/- 180 degrees
-void Turn(int Degrees)
+//biggest amount you can turn is +/- 180 degrees, speed is relative, with .5 being normal and 1 being massive
+void Turning_Turn(int Degrees, float Speed)
 {
 	hogCPU();
 
@@ -49,7 +60,7 @@ void Turn(int Degrees)
 	Move(0, 0);
 }
 
-void Straight(int Power, int  Miliseconds)
+void Turning_Straight(int Power, int  Miliseconds)
 {
 	hogCPU();
 
