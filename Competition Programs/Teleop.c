@@ -30,6 +30,16 @@ void MoveArm(int Power)
 	Arm_SetSpeed(Power);
 }
 
+void LockArm()
+{
+	//sets the position to its current position, then stops all other activity
+	I2C_SetEncoderPosition(S1, 1, 1, I2C_GetEncoderPosition(S1, 1, 1), 10);
+	sleep(1000);
+	while(joy2Btn(4) == 1)
+	{
+	}
+}
+
 void PickupBlocks(int Power)
 {
 	nxtDisplayString(4, "Pikcup-power: %i", Power);
@@ -134,6 +144,11 @@ task main()
 		if(joy2Btn(2) == 1)
 		{
 			Arm_Reinitialize();
+		}
+
+		if(joy2Btn(4) == 1)
+		{
+			LockArm();
 		}
 
 		//changes the mode to turbo if either bumper on driver joystick is pressed
