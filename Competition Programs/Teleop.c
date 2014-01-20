@@ -34,7 +34,7 @@ void PickupBlocks(int Power)
 {
 	nxtDisplayString(4, "Pikcup-power: %i", Power);
 	//moves motor
-	Motors_SetSpeed(S2, 1, 1, Power);
+	Motors_SetSpeed(S1, 3, 1, Power);
 }
 
 task main()

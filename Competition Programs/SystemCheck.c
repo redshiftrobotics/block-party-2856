@@ -26,15 +26,17 @@ task main()
 	bool LeftSide = TestJoint(S1, 2, 2, 20);
 	bool Arm = TestJoint(S1, 1, 1, -100);
 	bool Flag = TestJoint(S1, 1, 2, 20);
+	bool Collector = TestJoint(S1, 3, 1, 20);
 
 	eraseDisplay();
 	nxtDisplayString(1, "Left Side: %i", LeftSide);
 	nxtDisplayString(2, "Right Side: %i", RightSide);
 	nxtDisplayString(3, "Arm: %i", Arm);
 	nxtDisplayString(4, "Flag: %i", Flag);
+	nxtDisplayString(5, "Collector: %i", Collector);
 
 	//if there is a failure in any of the parts, beep.
-	if(!LeftSide || !RightSide || !Arm || !Flag)
+	if(!LeftSide || !RightSide || !Arm || !Flag || !Collector)
 	{
 		PlayImmediateTone(100, 100);
 	}

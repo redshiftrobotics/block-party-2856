@@ -1,4 +1,5 @@
 #include "../libraries/Gyro.c"
+#include "../libraries/IR.c"
 #include "../libraries/Motors.h"
 
 float FinalX = 5;
@@ -43,7 +44,7 @@ void Turning_Calibrate()
 }
 
 //biggest amount you can turn is +/- 180 degrees, speed is relative, with .5 being normal and 1 being massive
-void Turning_Turn(int Degrees, float Speed)
+void Turning_Turn(int Degrees)
 {
 	hogCPU();
 
@@ -74,6 +75,28 @@ void Turning_Straight(int Power, int  Miliseconds)
 	{
 		Move(Power + Heading, Power - Heading);
 	}
+
+	Move(0, 0);
+}
+
+void Turning_StraightToIR(int Power)
+{
+	//reset the IR
+	IR_Reset();
+
+	//reset the gyro and drift variable
+	hogCPU();
+	Gyro_Reset();
+	TotalDrift = 0;
+	releaseCPU();
+
+	//while the robot is not in front of the IR, move forward
+	while(!IR_InFront())
+	{
+		Move(Power + Heading, Power - Heading);
+	}
+
+	//once it is in front or the IR, stop the robot
 	Move(0, 0);
 }
 

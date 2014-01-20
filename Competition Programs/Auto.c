@@ -171,9 +171,9 @@ task main()
 	Arm_SetSpeed(0);
 
 	//spit out block
-	Motors_SetSpeed(S2, 1, 1, -100);
+	Motors_SetSpeed(S1, 3, 1, -100);
 	sleep(1000);
-	Motors_SetSpeed(S2, 1, 1, 0);
+	Motors_SetSpeed(S1, 3, 1, 0);
 
 	//moves backward
 	Move(-40, -40);
