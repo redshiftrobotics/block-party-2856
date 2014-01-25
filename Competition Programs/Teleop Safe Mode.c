@@ -25,7 +25,9 @@ void MoveArm(int Power)
 //pick up blocks funciton
 void PickupBlocks(int Power)
 {
-	I2C_SetMotorSpeed(S2, 1, 1, Power);
+	nxtDisplayString(4, "Pikcup-power: %i", Power);
+	//moves motor
+	I2C_SetSpeed(S1, 3, 1, Power);
 }
 
 task main()

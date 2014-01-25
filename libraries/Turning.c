@@ -53,9 +53,13 @@ void Turning_Turn(int Degrees)
 
 	releaseCPU();
 
-	while(abs(-Degrees + Heading) > 1)
+
+	while(abs(-Degrees + Heading) > 2)
 	{
-		Move((-Degrees + Heading) / 2, (Degrees - Heading) / 2)
+		//writeDebugStreamLine("%i", Degrees);
+		//writeDebugStreamLine("%i", Heading);
+
+		Move((-Degrees + Heading) / 1.5, (Degrees - Heading) / 1.5)
 	}
 
 	Move(0, 0);
@@ -79,27 +83,6 @@ void Turning_Straight(int Power, int  Miliseconds)
 	Move(0, 0);
 }
 
-void Turning_StraightToIR(int Power)
-{
-	//reset the IR
-	IR_Reset();
-
-	//reset the gyro and drift variable
-	hogCPU();
-	Gyro_Reset();
-	TotalDrift = 0;
-	releaseCPU();
-
-	//while the robot is not in front of the IR, move forward
-	while(!IR_InFront())
-	{
-		Move(Power + Heading, Power - Heading);
-	}
-
-	//once it is in front or the IR, stop the robot
-	Move(0, 0);
-}
-
 task UpdateHeading()
 {
 	while(true)
@@ -107,5 +90,6 @@ task UpdateHeading()
 		TotalDrift -= ChangePerSecond * Time1[T3] / 1000;
 		Time1[T3] = 0;
 		Heading = Gyro_Heading() + TotalDrift;
+		sleep(100);
 	}
 }

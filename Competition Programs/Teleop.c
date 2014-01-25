@@ -1,5 +1,6 @@
-#pragma config(Sensor, S2,     ,               sensorI2CCustom)
 #pragma config(Sensor, S1,     ,               sensorI2CCustom)
+#pragma config(Sensor, S2,     IR,             sensorI2CCustom)
+#pragma config(Sensor, S3,     Gyro,             sensorI2CCustom)
 #pragma config(Sensor, S4,     ,               sensorTouch)
 
 #include "../libraries/Servos.h"
@@ -33,9 +34,10 @@ void MoveArm(int Power)
 void LockArm()
 {
 	//sets the position to its current position, then stops all other activity
-	I2C_SetEncoderPosition(S1, 1, 1, I2C_GetEncoderPosition(S1, 1, 1), 10);
-	sleep(1000);
-	while(joy2Btn(4) == 1)
+	int Encoder = I2C_GetEncoderPosition(S1, 1, 1);
+
+	Motors_SetPosition(S1, 1, 1, Encoder, 20);
+	while(true)
 	{
 	}
 }
@@ -126,13 +128,11 @@ task main()
 		//if the right bumper is pressed, lower the flag slowly
 		else if(joy2Btn(5) == 1)
 		{
-			writeDebugStreamLine("Press Right");
 			Motors_SetSpeed(S1, 1, 2, -5);
 		}
 		//if the left bumper is pressed, lower the flag slowly
 		else if(joy2Btn(6) == 1)
 		{
-			writeDebugStreamLine("Press Left");
 			Motors_SetSpeed(S1, 1, 2, 5);
 		}
 		else
@@ -146,7 +146,7 @@ task main()
 			Arm_Reinitialize();
 		}
 
-		if(joy2Btn(4) == 1)
+		if(joy2Btn(4) == 1 && joy1Btn(4) == 1)
 		{
 			LockArm();
 		}
