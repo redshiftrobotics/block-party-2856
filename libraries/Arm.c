@@ -45,7 +45,7 @@ void Arm_Update()
 		if(SensorValue[S4] == 1)
 		{
 			Arm_Initialized = true;
-			Arm_BottomEncoderLimit = Arm_Encoder + (0 * 1440); //the amount of distance from the buttom press down. This lets it go below the button press.
+			Arm_BottomEncoderLimit = Arm_Encoder + (-.2 * 1440); //the amount of distance from the buttom press down. This lets it go below the button press.
 			Arm_TopEncoderLimit = Arm_Encoder - (10 * 1440);
 		}
 	}
