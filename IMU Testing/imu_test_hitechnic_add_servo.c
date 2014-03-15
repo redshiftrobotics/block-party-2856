@@ -14,7 +14,7 @@
 #include "drivers/hitechnic-accelerometer.h"
 
 // System constants
-const float gyroMeasError = 3.14159265358979 * (30.0 / 180.0); // gyroscope measurement error in rad/s (shown as 5 deg/s)
+const float gyroMeasError = 3.14159265358979 * (3 / 180.0); // gyroscope measurement error in rad/s (shown as 5 deg/s)
 const float beta = sqrt(3.0 / 4.0) * gyroMeasError; // compute beta
 
 // Global system variables
@@ -99,7 +99,7 @@ task main()
 	float euler[3];
 	servo[Turret] = servoPosition;
 	wait1Msec(2000);  //stabilize
-	writeDebugStreamLine("Euler Angle, Servo Angle");
+	writeDebugStreamLine("a_x, a_y, a_z, w_z, Euler Angle, servo Angle, Difference");
 
   HTGYROstartCal(HTGYRO);
   wait1Msec(2000);  //stabilize
@@ -109,7 +109,7 @@ task main()
 			servo[Turret] = servoPosition;
 			servoTimeStamp = nPgmTime;
 
-			if(servoTimeStamp - servoLastIncrement > 10000) {
+			if(servoTimeStamp - servoLastIncrement > 5000) {
 					servoPosition += 25;
 					servoLastIncrement = servoTimeStamp;
 
@@ -128,12 +128,12 @@ task main()
  			//convert to rad/s
  			w_z *= PI/180;
 
-			/*writeDebugStream("a_x, %f", a_x);
- 			writeDebugStream("  a_y, %f", a_y);
- 			writeDebugStream("  a_z, %f", a_y);
- 			writeDebugStream("  w_x, %f", w_x);
- 			writeDebugStream("  w_y, %f", w_y);
- 			writeDebugStreamLine("  w_z, %f", w_z); */
+			writeDebugStream("%f", a_x);
+ 			writeDebugStream(" , %f", a_y);
+ 			writeDebugStream(" , %f", a_z);
+ 			//writeDebugStream(" , %f", w_x);
+ 			//writeDebugStream(" , %f", w_y);
+ 			writeDebugStream(" , %f", w_z);
 
 
 			now = nPgmTime;
@@ -175,10 +175,11 @@ task main()
  			//writeDebugStream("  q2, %f", q2);
  			//writeDebugStream("  q3, %f", q3);
  			//writeDebugStream("  Psi, %f", euler[0]);
-  		writeDebugStream("%f, ", eulerdeg);
+  		writeDebugStream(" , %f, ", eulerdeg);
  		//	writeDebugStream("  Theta, %f", euler[1]);
  		//	writeDebugStream("  Phi, %f", euler[2]);
- 			writeDebugStreamLine("%f", servoAngle);
+ 			writeDebugStream("%f, ", servoAngle);
+ 			writeDebugStreamLine("%i", servoAngle-eulerdeg);
  			//writeDebugStreamLine("  ServoPosition, %i", servoPosition);
  			//writeDebugStreamLine("  Prgrm Time, %i", servoTimeStamp);
 
