@@ -5,23 +5,22 @@
   This example code is in the public domain.
  */
  
-// Pin 13 has an LED connected on most Arduino boards.
-// give it a name:
-int led = 8;
+
 
 // the setup routine runs once when you press reset:
 void setup() {                
   // initialize the digital pin as an output.
-  for (int i = 0; i < 5; i++)
+  for (int dPin = 0; dPin < 9; dPin++)
   {
-    pinMode(i, OUTPUT);
-  }   
+    pinMode(dPin, OUTPUT);
+  } 
 }
 
 // the loop routine runs over and over again forever:
 void loop() {
-  int dPin;
-  for (dPin = 0; dPin < 5; dPin++)
+  
+  
+  for (int dPin = 0; dPin < 9; dPin++)
   {
     digitalWrite(dPin, HIGH);
     delay(100);

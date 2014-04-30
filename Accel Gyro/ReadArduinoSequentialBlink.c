@@ -28,7 +28,8 @@
 #include "drivers/hitechnic-protoboard.h"
 
 task main() {
-  int _chVal = 0;
+  int _chVal = 0;  // analog input
+  byte inputs = 0;  // all digital inputs
 
   nxtDisplayCenteredTextLine(0, "HiTechnic");
   nxtDisplayCenteredBigTextLine(1, "Proto");
@@ -67,6 +68,8 @@ task main() {
     	  j++;
 
   }
+  inputs = HTPBreadIO(HTPB, 0x3F);
+  nxtDisplayTextLine(5, "D: 0x%x", inputs);
   wait1Msec(100);
 }
 
