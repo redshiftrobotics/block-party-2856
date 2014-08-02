@@ -67,9 +67,28 @@
 			<div id = "Add" draggable="true">Drag Here</div>
 		</div>
 		<div id = "Program">
+			<div id = "Sleep">
+				<p>1</p>
+			</div>
 		</div>
 	</body>
 	<script>
+
+		function ParseProgram()
+		{
+			
+			var ElementList = document.getElementById("Program").children; 
+			
+			for(i = 0; i < ElementList.length; i++)
+			{
+				ValueList = ElementList[i].children
+				if(ElementList[i].getAttribute('id') == "Sleep")
+				{
+					alert("Sleep");'
+				}
+			}
+		}
+		
 		var dragSrcEl = null;
 
 		function handleDragStart(e) {
@@ -188,6 +207,7 @@
 			col.addEventListener('drop', handleDrop, false);
 		});
 		
-		
+		alert("started");
+		ParseProgram();
 	</script>
 </html>
