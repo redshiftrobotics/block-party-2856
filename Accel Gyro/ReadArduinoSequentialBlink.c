@@ -75,10 +75,10 @@ task main() {
   value+=(inputs&0x04)>>1;
   value+=(inputs&0x08)>>3;
   nxtDisplayBigTextLine(6, "%d", value);
-  touchValue = sensorValue[S2];
-  if(touchValue == 1) { HTPBwriteIO(HTPB, 0x10); }  // turn on B4
-  else { HTPBwriteIO(HTPB, 0x00); }  // turn off B4
-  wait1Msec(100);
+  //touchValue = sensorValue[S2];
+  //if(touchValue == 1) { HTPBwriteIO(HTPB, 0x10); }  // turn on B4
+  //else { HTPBwriteIO(HTPB, 0x00); }  // turn off B4
+  wait1Msec(50);
 }
 }
 /*
