@@ -28,7 +28,7 @@ void setup() {
 
 void makeRandom()
 {
-  randNumber = random(512);
+  //randNumber = random(512);
 }
 
 
@@ -45,5 +45,7 @@ void loop() {
     else 
       digitalWrite(9, value);
   }
-  delay(50);
+  delay(500);
+  ++randNumber;
+  randNumber = randNumber%512;
 }
