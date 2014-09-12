@@ -19,6 +19,18 @@
 
 #include "drivers/hitechnic-protoboard.h"
 
+int mapNineBitToDegrees(int nineBitNum)
+{
+	float Degrees = 0;
+	float NineBitNum = 0;
+	float slope = 360.0/512.0;
+
+	NineBitNum = (float)(nineBitNum);
+	Degrees=slope*NineBitNum;
+	Degrees=Degrees - 180.0;
+	return (int)(Degrees);
+}
+
 task main() {
   int _chVal = 0;  // analog input
   byte inputs = 0;  // all digital inputs
@@ -74,7 +86,7 @@ task main() {
   value+=(inputs&0x02)<<1;
   value+=(inputs&0x04)>>1;
   value+=(inputs&0x08)>>3;
-  nxtDisplayBigTextLine(6, "%d", value);
+  nxtDisplayBigTextLine(6, "%d", mapNineBitToDegrees(value));
   //touchValue = sensorValue[S2];
   //if(touchValue == 1) { HTPBwriteIO(HTPB, 0x10); }  // turn on B4
   //else { HTPBwriteIO(HTPB, 0x00); }  // turn off B4
